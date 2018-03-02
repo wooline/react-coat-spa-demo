@@ -1,0 +1,16 @@
+{
+  "extends": ["tslint-config-standard", "tslint-react"],
+  "rules": {
+    "no-unused-variable": true,
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "one-variable-per-declaration": false,
+    "jsx-boolean-value": false,
+    "jsx-no-multiline-js": false,
+    "jsx-no-lambda": false,
+    "prefer-const": true,
+    "ordered-imports": true,
+    "space-before-function-paren": false,
+    "quotemark": [true, "double"],
+    "ter-indent": false
+  }
+}
