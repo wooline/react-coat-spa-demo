@@ -17,6 +17,7 @@
         "ignoreMemberSort": false,
         "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
       }
-    ]
+    ],
+    "space-before-function-paren": "off"
   }
 }

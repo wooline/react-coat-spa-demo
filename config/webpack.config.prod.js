@@ -10,8 +10,13 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const StylelintPlugin = require("stylelint-webpack-plugin");
+const AutoDllPlugin = require("autodll-webpack-plugin");
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+
+const appPackage = require(paths.appPackageJson);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -56,7 +61,7 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: [paths.appIndexJs],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -78,7 +83,7 @@ module.exports = {
     // We placed these paths second because we want `node_modules` to "win"
     // if there are any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
-    modules: ['node_modules', paths.appNodeModules].concat(
+    modules: [paths.appNodeModules, paths.appSrc].concat(
       // It is guaranteed to exist because we tweak it in `env.js`
       process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
     ),
@@ -88,7 +93,7 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
       
       // Support React Native Web
@@ -101,7 +106,7 @@ module.exports = {
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson])
     ],
   },
   module: {
@@ -114,9 +119,10 @@ module.exports = {
       // First, run the linter.
       // It's important to do this before Babel processes the JS.
       {
-        test: /\.(js|jsx|mjs)$/,
+        test: /\.(js|jsx)$/,
         enforce: 'pre',
         use: [
+          require.resolve('source-map-loader'),
           {
             options: {
               formatter: eslintFormatter,
@@ -145,13 +151,32 @@ module.exports = {
           },
           // Process JS with Babel.
           {
-            test: /\.(js|jsx|mjs)$/,
+            test: /\.(js|jsx)$/,
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
               
               compact: true,
             },
+          },
+          {
+            test: /\.(ts|tsx)$/,
+            include: paths.appSrc,
+            use: [
+              { 
+                loader: require.resolve('babel-loader'),
+                options: {
+	              compact: true,
+	            },
+              },
+              {
+                loader: require.resolve('ts-loader'),
+                options: {
+                  // disable type checker - we will use it in fork plugin
+                  transpileOnly: true,
+                },
+              },
+            ],
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.
@@ -194,17 +219,55 @@ module.exports = {
                         plugins: () => [
                           require('postcss-flexbugs-fixes'),
                           autoprefixer({
-                            browsers: [
-                              '>1%',
-                              'last 4 versions',
-                              'Firefox ESR',
-                              'not ie < 9', // React doesn't support IE8 anyway
-                            ],
                             flexbox: 'no-2009',
                           }),
                         ],
                       },
                     },
+                  ],
+                },
+                extractTextPluginOptions
+              )
+            ),
+            // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+          },
+          {
+            test: /\.less$/,
+            loader: ExtractTextPlugin.extract(
+              Object.assign(
+                {
+                  fallback: {
+                    loader: require.resolve('style-loader'),
+                    options: {
+                      hmr: false,
+                    },
+                  },
+                  use: [
+                    {
+                      loader: require.resolve('css-loader'),
+                      options: {
+                        importLoaders: 1,
+                        minimize: true,
+                        sourceMap: shouldUseSourceMap,
+                      },
+                    },
+                    {
+                      loader: require.resolve('postcss-loader'),
+                      options: {
+                        // Necessary for external CSS imports to work
+                        // https://github.com/facebookincubator/create-react-app/issues/2677
+                        ident: 'postcss',
+                        plugins: () => [
+                          require('postcss-flexbugs-fixes'),
+                          autoprefixer({
+                            flexbox: 'no-2009',
+                          }),
+                        ],
+                      },
+                    },
+	                {
+	                  loader: require.resolve('less-loader')
+	                }
                   ],
                 },
                 extractTextPluginOptions
@@ -222,7 +285,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|jsx)$/, /\.html$/, /\.json$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
@@ -263,26 +326,26 @@ module.exports = {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified),
     // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        // Disabled because of an issue with Uglify breaking seemingly valid code:
-        // https://github.com/facebookincubator/create-react-app/issues/2376
-        // Pending further investigation:
-        // https://github.com/mishoo/UglifyJS2/issues/2011
-        comparisons: false,
-      },
-      mangle: {
-        safari10: true,
-      },
-      output: {
-        comments: false,
-        // Turned on because emoji and regex is not minified properly using default
-        // https://github.com/facebookincubator/create-react-app/issues/2488
-        ascii_only: true,
-      },
-      sourceMap: shouldUseSourceMap,
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false,
+    //     // Disabled because of an issue with Uglify breaking seemingly valid code:
+    //     // https://github.com/facebookincubator/create-react-app/issues/2376
+    //     // Pending further investigation:
+    //     // https://github.com/mishoo/UglifyJS2/issues/2011
+    //     comparisons: false,
+    //   },
+    //   mangle: {
+    //     safari10: true,
+    //   },
+    //   output: {
+    //     comments: false,
+    //     // Turned on because emoji and regex is not minified properly using default
+    //     // https://github.com/facebookincubator/create-react-app/issues/2488
+    //     ascii_only: true,
+    //   },
+    //   sourceMap: shouldUseSourceMap,
+    // }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: cssFilename,
@@ -329,6 +392,23 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new ForkTsCheckerWebpackPlugin({
+      async: false,
+      tsconfig: paths.appTsConfig,
+      tslint: paths.appTsLint,
+    }),
+    new StylelintPlugin({
+      configFile: paths.styleLintConfig,
+      context: paths.appSrc
+    }),
+    new AutoDllPlugin({
+      context: paths.appRoot,
+      inject: true,
+      debug: true,
+      filename: "[name].js",
+      path: "static/js",
+      entry: appPackage.dllDependencies
+    })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
@@ -338,5 +418,5 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty',
-  },
+  }
 };

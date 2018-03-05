@@ -44,7 +44,7 @@ module.exports = {
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
+  appIndexJs: resolveApp('src/index.tsx'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   yarnLockFile: resolveApp('yarn.lock'),
@@ -52,4 +52,7 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
+  appTsLint: resolveApp('tslint.json'),
+  styleLintConfig: getServedPath(resolveApp('.stylelintrc.json')),
+  appRoot: resolveApp('')
 };

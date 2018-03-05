@@ -39,8 +39,8 @@ export namespace api {
   };
 
   export interface UserService {
-    GetCurrentUser(): Promise<api.user.GetCurrentUserResponse>;
-    Login(request: api.user.LoginRequest): Promise<api.user.LoginResponse>;
+    GetCurrentUser(): Promise<user.GetCurrentUserResponse>;
+    Login(request: user.LoginRequest): Promise<user.LoginResponse>;
   }
 
   export const ConfigServiceMetadata = {
@@ -48,6 +48,6 @@ export namespace api {
   };
 
   export interface ConfigService {
-    GetSettings(): Promise<api.config.GetSettingsResponse>;
+    GetSettings(): Promise<config.GetSettingsResponse>;
   }
 }
