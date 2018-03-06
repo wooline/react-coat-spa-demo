@@ -1,18 +1,18 @@
 import { setLoading } from "react-coat";
-import client from "service/user";
+import client from "service/session";
 import namespace from "../namespace";
 
-export interface QueryResult {
+export interface GetCurUserResponse {
   uid: string;
   username: string;
 }
-export interface CreateResult {
+export interface LoginResponse {
   uid: string;
   username: string;
 }
-export async function query(): Promise<QueryResult> {
-  return setLoading(client.GetCurrentUser());
+export async function getCurUser(): Promise<GetCurUserResponse> {
+  return setLoading(client.query());
 }
-export async function create(username: string, password: string): Promise<CreateResult> {
-  return setLoading(client.Login({ username, password }), namespace, "login");
+export async function login(username: string, password: string): Promise<LoginResponse> {
+  return setLoading(client.create({ username, password }), namespace, "login");
 }

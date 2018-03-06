@@ -1,9 +1,9 @@
 import { setLoading } from "react-coat";
-import client from "service/config";
+import client from "service/settings";
 
-export interface QueryResult {
+export interface GetSettingsResponse {
   title: string;
 }
-export async function query(): Promise<QueryResult> {
-  return setLoading(client.GetSettings());
+export async function getSettings(): Promise<GetSettingsResponse> {
+  return setLoading(client.query());
 }

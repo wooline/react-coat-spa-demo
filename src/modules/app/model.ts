@@ -41,13 +41,13 @@ const actions = extendActions(state, {
     return { ...moduleState, curUser };
   },
   *_startup(data: State["projectConfig"], moduleState: State = state, rootState: any) {
-    const config: settingsService.QueryResult = yield call(settingsService.query);
+    const config: settingsService.GetSettingsResponse = yield call(settingsService.getSettings);
     yield put(thisActions.updateSettings(config) as any);
-    const curUser: sessionService.QueryResult = yield call(sessionService.query);
+    const curUser: sessionService.GetCurUserResponse = yield call(sessionService.getCurUser);
     yield put(thisActions.updateCurUser(curUser) as any);
   },
   *_login({ username, password }: { username: string; password: string }) {
-    const curUser: sessionService.CreateResult = yield call(sessionService.create, username, password);
+    const curUser: sessionService.LoginResponse = yield call(sessionService.login, username, password);
     yield put(thisActions.updateCurUser(curUser) as any);
   }
 });
