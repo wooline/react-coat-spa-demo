@@ -99,6 +99,7 @@
     "tslint-config-standard": "^7.0.0",
     "tslint-react": "^3.5.1",
     "typescript": "^2.7.2",
+    "uglifyjs-webpack-plugin": "^1.2.2",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
@@ -112,9 +113,16 @@
     "mock": "nodemon"
   },
   "jest": {
-    "collectCoverageFrom": ["src/**/*.{js,jsx,mjs}"],
-    "setupFiles": ["<rootDir>/config/polyfills.js"],
-    "testMatch": ["<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}", "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,mjs}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
+      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
+    ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
@@ -122,22 +130,36 @@
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"],
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+    ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
-    "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "node"]
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "node"
+    ]
   },
   "nodemonConfig": {
-    "watch": ["mock_server/"],
+    "watch": [
+      "mock_server/"
+    ],
     "ext": "ts js json",
     "delay": "1000",
     "exec": "ts-node --typeCheck true --compilerOptions \"{\\\"module\\\":\\\"commonjs\\\"}\" mock_server/index.ts"
   },
-  "browserslist": ["chrome >= 63"],
+  "browserslist": [
+    "chrome >= 63"
+  ],
   "babel": {
     "presets": [
-      ["@babel/react"],
+      [
+        "@babel/react"
+      ],
       [
         "@babel/env",
         {

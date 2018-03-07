@@ -13,6 +13,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const StylelintPlugin = require("stylelint-webpack-plugin");
 const AutoDllPlugin = require("autodll-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
@@ -325,6 +326,19 @@ module.exports = {
     // It is absolutely essential that NODE_ENV was set to production here.
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        compress: {
+          warnings: false,
+          comparisons: false
+        },
+        output: {
+          comments: false,
+          ascii_only: true
+        },
+        sourceMap: false
+      }
+    }),
     // Minify the code.
     // new webpack.optimize.UglifyJsPlugin({
     //   compress: {

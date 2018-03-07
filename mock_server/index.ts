@@ -1,13 +1,12 @@
 import * as bodyParser from "body-parser";
 import * as chalk from "chalk";
 import * as connect from "connect";
+import * as cookie from "cookie";
 import * as cookieParser from "cookie-parser";
 import * as session from "express-session";
 import * as http from "http";
-import * as cookie from "ramda";
 import * as serveStatic from "serve-static";
 import * as url from "url";
-
 import api from "./api";
 
 export class Request {
