@@ -1,4 +1,4 @@
-import { RootState } from "core/store";
+import RootState from "core/RootState.d";
 import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";

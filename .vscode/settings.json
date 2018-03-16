@@ -1,11 +1,14 @@
 {
+  "files.eol": "\n",
   "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.stylelintIntegration": true,
   "editor.formatOnSave": true,
-  "sort-imports.languages": ["javascript"],
   "typescript.extension.sortImports.sortMethod": "path",
-  "typescript.extension.sortImports.quoteStyle": "double",
-  "typescript.extension.sortImports.pathSortOrder": ["package", "relativeUpLevel", "relativeDownLevel"]
-  //"prettier.eslintIntegration": true,
-  //"prettier.stylelintIntegration": true,
-  //"git.ignoreLimitWarning": true
+  "typescript.extension.sortImports.maxNamedImportsInSingleLine": 20,
+  "typescript.extension.sortImports.pathSortOrder": [
+    "package",
+    "relativeDownLevel",
+    "relativeUpLevel"
+  ],
+  "git.ignoreLimitWarning": true
 }

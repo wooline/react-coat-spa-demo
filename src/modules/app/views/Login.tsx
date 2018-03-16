@@ -1,5 +1,5 @@
-import { RootState } from "core/store";
-import thisActions from "modules/app/facade";
+import RootState from "core/RootState";
+import thisModule from "modules/app";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -23,7 +23,7 @@ class Component extends React.PureComponent<Props, State> {
     const { dispatch, hasLogined, logining, location } = this.props;
     const { from } = location.state || { from: { pathname: "/" } };
     function login(evt) {
-      dispatch(thisActions._login({ username: "", password: "" }) as any);
+      dispatch(thisModule.actions._login({ username: "", password: "" }) as any);
     }
     return hasLogined ? (
       <Redirect to={from} />

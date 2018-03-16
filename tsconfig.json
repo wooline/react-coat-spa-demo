@@ -19,5 +19,6 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true
   },
+  "include": ["src"],
   "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest"]
 }

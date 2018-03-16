@@ -11,6 +11,7 @@
     "ordered-imports": true,
     "space-before-function-paren": false,
     "quotemark": [true, "double"],
-    "ter-indent": false
+    "ter-indent": false,
+    "no-floating-promises": false
   }
 }

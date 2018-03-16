@@ -1,4 +1,4 @@
-import { RootState } from "core/store";
+import RootState from "core/RootState.d";
 import React, { ComponentType } from "react";
 import { connect } from "react-redux";
 import { Redirect, Route, RouteComponentProps, RouteProps } from "react-router-dom";
@@ -19,13 +19,7 @@ interface OwnProps {}
 interface State {}
 
 function render(auth: AuthState, props: RouteComponentProps<any>, Component: ComponentType<any>) {
-  return auth === AuthState.Pending ? (
-    <Startup />
-  ) : auth === AuthState.Authorized ? (
-    <Component {...props} />
-  ) : (
-    <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
-  );
+  return auth === AuthState.Pending ? <Startup /> : auth === AuthState.Authorized ? <Component {...props} /> : <Redirect to={{ pathname: "/login", state: { from: props.location } }} />;
 }
 
 class Component extends React.PureComponent<Props, State> {

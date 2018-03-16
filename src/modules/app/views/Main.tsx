@@ -1,7 +1,7 @@
 import Loading from "components/Loading";
 import NotFound from "components/NotFound";
 import VerifyRoute, { AuthState } from "components/ProtectedRoute";
-import { RootState } from "core/store";
+import RootState from "core/RootState";
 import { hasLogin } from "helper/user";
 import React from "react";
 import { asyncComponent } from "react-coat";
@@ -10,7 +10,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Dispatch } from "redux";
 import Login from "./Login";
 
-const Admin = asyncComponent(() => import("modules/admin"));
+const Admin = asyncComponent(() => import("modules/admin/components"));
 
 type User = RootState["project"]["app"]["curUser"];
 
@@ -35,17 +35,8 @@ class Component extends React.PureComponent<Props, State> {
       <div>
         <Switch>
           <Redirect exact path="/" to="/admin" />
-          <VerifyRoute
-            auth={projectConfigLoaded && curUserLoaded ? hasAuth("/admin", curUser) : AuthState.Pending}
-            path="/admin"
-            component={Admin}
-          />
-          <VerifyRoute
-            auth={projectConfigLoaded && curUserLoaded ? AuthState.Authorized : AuthState.Pending}
-            path="/login"
-            exact
-            component={Login}
-          />
+          <VerifyRoute auth={projectConfigLoaded && curUserLoaded ? hasAuth("/admin", curUser) : AuthState.Pending} path="/admin" component={Admin} />
+          <VerifyRoute auth={projectConfigLoaded && curUserLoaded ? AuthState.Authorized : AuthState.Pending} path="/login" exact component={Login} />
           <Route component={NotFound} />
         </Switch>
         <Loading loading={globalLoading} />

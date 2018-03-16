@@ -6859,16 +6859,13 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-coat@^0.1.0:
-  version "0.1.0"
-  resolved "http://registry.npm.taobao.org/react-coat/download/react-coat-0.1.0.tgz#5b4652a0a012e7445ba520f2e155078c67955f0f"
+react-coat@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/react-coat/-/react-coat-0.2.0.tgz#2b2be6fcf13131e3b5fdcbf0eb0d150002349830"
   dependencies:
-    react "^16.2.0"
-    react-dom "^16.2.0"
-    react-redux "^5.0.6"
+    history "^4.7.2"
     react-router-dom "^4.2.2"
     react-router-redux "^5.0.0-alpha.9"
-    redux "^3.7.2"
     redux-saga "^0.16.0"
 
 react-dev-utils@^5.0.0:
@@ -6907,7 +6904,7 @@ react-error-overlay@^4.0.0:
   version "4.0.0"
   resolved "http://registry.npm.taobao.org/react-error-overlay/download/react-error-overlay-4.0.0.tgz#d198408a85b4070937a98667f500c832f86bd5d4"
 
-react-redux@^5.0.6, react-redux@^5.0.7:
+react-redux@^5.0.7:
   version "5.0.7"
   resolved "http://registry.npm.taobao.org/react-redux/download/react-redux-5.0.7.tgz#0dc1076d9afb4670f993ffaef44b8f8c1155a4c8"
   dependencies:

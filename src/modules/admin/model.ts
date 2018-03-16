@@ -1,4 +1,4 @@
-import { extendActions, extendHandlers, extendState } from "react-coat";
+import { buildModel, buildState } from "react-coat";
 
 interface InintState {
   user: {
@@ -7,31 +7,25 @@ interface InintState {
     age: number;
   };
 }
-const inintState: InintState = {
+
+const state = buildState<InintState>({
   user: {
     age: 0,
     uid: "",
     userName: ""
   }
-};
-
-const state = extendState(inintState);
-
-const actions = extendActions(state, {
-  updateUser(user: State["user"], moduleState: State = state, rootState?: any): State {
-    return { ...moduleState, user: { ...user } };
-  },
-  updateUserName(userName: string, moduleState: State = state, rootState?: any): State {
-    return {
-      ...moduleState,
-      user: { ...moduleState.user, userName }
-    };
-  }
 });
 
-const handlers = extendHandlers(state, {});
-
 type State = typeof state;
-type Actions = typeof actions;
 
-export { actions, handlers, Actions, State };
+const actions = {};
+
+const handlers = {};
+
+const model = buildModel(state, actions, handlers);
+
+export default model;
+
+type Actions = typeof model.actions;
+
+export { Actions, State };

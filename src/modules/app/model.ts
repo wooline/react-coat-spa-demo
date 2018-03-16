@@ -1,8 +1,8 @@
-import thisActions from "modules/app/facade";
-import { extendActions, extendHandlers, extendState } from "react-coat";
+import thisModule from "modules/app";
+import { buildActionByEffect, buildActionByReducer, buildModel, buildState } from "react-coat";
 import { call, put } from "redux-saga/effects";
-import * as sessionService from "./dao/session";
-import * as settingsService from "./dao/settings";
+import * as sessionService from "./api/session";
+import * as settingsService from "./api/settings";
 
 interface InintState {
   projectConfig: {
@@ -17,7 +17,8 @@ interface InintState {
     login: string;
   };
 }
-const inintState: InintState = {
+
+const state = buildState<InintState>({
   projectConfig: {
     title: "aaaa"
   },
@@ -29,37 +30,40 @@ const inintState: InintState = {
   loading: {
     login: ""
   }
-};
-
-const state = extendState(inintState);
-
-const actions = extendActions(state, {
-  updateSettings(settings: State["projectConfig"], moduleState: State = state, rootState?: any): State {
-    return { ...moduleState, projectConfig: settings };
-  },
-  updateCurUser(curUser: State["curUser"], moduleState: State = state, rootState?: any): State {
-    return { ...moduleState, curUser };
-  },
-  *_startup(data: State["projectConfig"], moduleState: State = state, rootState: any) {
-    const config: settingsService.GetSettingsResponse = yield call(settingsService.getSettings);
-    yield put(thisActions.updateSettings(config) as any);
-    const curUser: sessionService.GetCurUserResponse = yield call(sessionService.getCurUser);
-    yield put(thisActions.updateCurUser(curUser) as any);
-  },
-  *_login({ username, password }: { username: string; password: string }) {
-    const curUser: sessionService.LoginResponse = yield call(sessionService.login, username, password);
-    yield put(thisActions.updateCurUser(curUser) as any);
-  }
-});
-
-const handlers = extendHandlers(state, {
-  "@@framework/ERROR": function({ message }, moduleState: State = state, rootState?: any): State {
-    alert(message);
-    return moduleState;
-  }
 });
 
 type State = typeof state;
-type Actions = typeof actions;
 
-export { actions, handlers, Actions, State };
+const actions = {
+  updateSettings: buildActionByReducer(function(settings: State["projectConfig"], moduleState: State = state, rootState: any): State {
+    return { ...moduleState, projectConfig: settings };
+  }),
+  updateCurUser: buildActionByReducer(function(curUser: State["curUser"], moduleState: State = state, rootState: any): State {
+    return { ...moduleState, curUser };
+  }),
+  _startup: buildActionByEffect(function*(data: State["projectConfig"], moduleState: State = state, rootState: any): any {
+    const config: settingsService.GetSettingsResponse = yield call(settingsService.getSettings);
+    yield put(thisModule.actions.updateSettings(config));
+    const curUser: sessionService.GetCurUserResponse = yield call(sessionService.getCurUser);
+    yield put(thisModule.actions.updateCurUser(curUser));
+  }),
+  _login: buildActionByEffect(function*({ username, password }: { username: string; password: string }): any {
+    const curUser: sessionService.LoginResponse = yield call(sessionService.login, username, password);
+    yield put(thisModule.actions.updateCurUser(curUser));
+  })
+};
+
+const handlers = {
+  "@@framework/ERROR": function({ message }, moduleState: State, rootState?: any): State {
+    alert(message);
+    return moduleState;
+  }
+};
+
+const model = buildModel(state, actions, handlers);
+
+export default model;
+
+type Actions = typeof model.actions;
+
+export { Actions, State };
