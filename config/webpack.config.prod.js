@@ -8,15 +8,14 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
-const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const StylelintPlugin = require("stylelint-webpack-plugin");
 const AutoDllPlugin = require("autodll-webpack-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
-
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const appPackage = require(paths.appPackageJson);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -62,7 +61,7 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
   // In production, we only want to load the polyfills and the app code.
-  entry: [paths.appIndexJs],
+  entry: [require.resolve('babel-polyfill'),paths.appIndexJs],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -79,12 +78,13 @@ module.exports = {
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/'),
   },
+  // externals: /^(@babel|core-js)/,
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
     // We placed these paths second because we want `node_modules` to "win"
     // if there are any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
-    modules: [paths.appNodeModules, paths.appSrc].concat(
+    modules: [paths.appSrc, paths.appNodeModules].concat(
       // It is guaranteed to exist because we tweak it in `env.js`
       process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
     ),
@@ -94,7 +94,18 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: [
+      '.mjs',
+      '.web.ts',
+      '.ts',
+      '.web.tsx',
+      '.tsx',
+      '.web.js',
+      '.js',
+      '.json',
+      '.web.jsx',
+      '.jsx',
+    ],
     alias: {
       
       // Support React Native Web
@@ -107,7 +118,8 @@ module.exports = {
       // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson])
+      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+      new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
   },
   module: {
@@ -116,23 +128,10 @@ module.exports = {
       // TODO: Disable require.ensure as it's not a standard language feature.
       // We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
       // { parser: { requireEnsure: false } },
-
-      // First, run the linter.
-      // It's important to do this before Babel processes the JS.
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|mjs)$/,
+        loader: require.resolve('source-map-loader'),
         enforce: 'pre',
-        use: [
-          require.resolve('source-map-loader'),
-          {
-            options: {
-              formatter: eslintFormatter,
-              eslintPath: require.resolve('eslint'),
-              
-            },
-            loader: require.resolve('eslint-loader'),
-          },
-        ],
         include: paths.appSrc,
       },
       {
@@ -150,9 +149,8 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
-          // Process JS with Babel.
           {
-            test: /\.(js|jsx)$/,
+            test: /\.(js|jsx|mjs)$/,
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
@@ -160,16 +158,11 @@ module.exports = {
               compact: true,
             },
           },
+          // Compile .tsx?
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
             use: [
-              { 
-                loader: require.resolve('babel-loader'),
-                options: {
-	              compact: true,
-	            },
-              },
               {
                 loader: require.resolve('ts-loader'),
                 options: {
@@ -220,6 +213,12 @@ module.exports = {
                         plugins: () => [
                           require('postcss-flexbugs-fixes'),
                           autoprefixer({
+                            browsers: [
+                              '>1%',
+                              'last 4 versions',
+                              'Firefox ESR',
+                              'not ie < 9', // React doesn't support IE8 anyway
+                            ],
                             flexbox: 'no-2009',
                           }),
                         ],
@@ -261,14 +260,20 @@ module.exports = {
                         plugins: () => [
                           require('postcss-flexbugs-fixes'),
                           autoprefixer({
+                            browsers: [
+                              '>1%',
+                              'last 4 versions',
+                              'Firefox ESR',
+                              'not ie < 9', // React doesn't support IE8 anyway
+                            ],
                             flexbox: 'no-2009',
                           }),
                         ],
                       },
                     },
-	                {
-	                  loader: require.resolve('less-loader')
-	                }
+                    {
+                      loader: require.resolve('less-loader')
+                    },
                   ],
                 },
                 extractTextPluginOptions
@@ -286,7 +291,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.(js|jsx)$/, /\.html$/, /\.json$/],
+            exclude: [/\.js$/, /\.html$/, /\.json$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
@@ -326,37 +331,29 @@ module.exports = {
     // It is absolutely essential that NODE_ENV was set to production here.
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false,
-          comparisons: false
-        },
-        output: {
-          comments: false,
-          ascii_only: true
-        },
-        sourceMap: false
-      }
-    }),
     // Minify the code.
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false,
-    //     // Disabled because of an issue with Uglify breaking seemingly valid code:
-    //     // https://github.com/facebookincubator/create-react-app/issues/2376
-    //     // Pending further investigation:
-    //     // https://github.com/mishoo/UglifyJS2/issues/2011
-    //     comparisons: false,
-    //   },
-    //   mangle: {
-    //     safari10: true,
-    //   },
-    //   output: {
-    //     comments: false,
-    //     // Turned on because emoji and regex is not minified properly using default
-    //     // https://github.com/facebookincubator/create-react-app/issues/2488
-    //     ascii_only: true,
+    // new UglifyJsPlugin({
+    //   parallel: true,
+    //   cache: true,
+    //   uglifyOptions: {
+    //     ecma: 8,
+    //     compress: {
+    //       warnings: false,
+    //       // Disabled because of an issue with Uglify breaking seemingly valid code:
+    //       // https://github.com/facebookincubator/create-react-app/issues/2376
+    //       // Pending further investigation:
+    //       // https://github.com/mishoo/UglifyJS2/issues/2011
+    //       comparisons: false,
+    //     },
+    //     mangle: {
+    //       safari10: true,
+    //     },
+    //     output: {
+    //       comments: false,
+    //       // Turned on because emoji and regex is not minified properly using default
+    //       // https://github.com/facebookincubator/create-react-app/issues/2488
+    //       ascii_only: true,
+    //     },
     //   },
     //   sourceMap: shouldUseSourceMap,
     // }),
@@ -406,6 +403,7 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    // Perform type checking and linting in a separate process to speed up compilation
     new ForkTsCheckerWebpackPlugin({
       async: false,
       tsconfig: paths.appTsConfig,
@@ -419,8 +417,37 @@ module.exports = {
       context: paths.appRoot,
       inject: true,
       debug: true,
-      filename: "[name].js",
+      filename: "[name].[hash:8].js",
       path: "static/js",
+      plugins: [
+          new webpack.DefinePlugin(env.stringified),
+          // new UglifyJsPlugin({
+          //   parallel: true,
+          //   cache: true,
+          //   uglifyOptions: {
+          //     ecma: 8,
+          //     compress: {
+          //       warnings: false,
+          //       // Disabled because of an issue with Uglify breaking seemingly valid code:
+          //       // https://github.com/facebookincubator/create-react-app/issues/2376
+          //       // Pending further investigation:
+          //       // https://github.com/mishoo/UglifyJS2/issues/2011
+          //       comparisons: false,
+          //     },
+          //     mangle: {
+          //       safari10: true,
+          //     },
+          //     output: {
+          //       comments: false,
+          //       // Turned on because emoji and regex is not minified properly using default
+          //       // https://github.com/facebookincubator/create-react-app/issues/2488
+          //       ascii_only: true,
+          //     },
+          //   },
+          //   sourceMap: shouldUseSourceMap,
+          // }),
+      ],
+      inherit: true,
       entry: appPackage.dllDependencies
     })
   ],
@@ -432,5 +459,5 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty',
-  }
+  },
 };

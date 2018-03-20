@@ -10,7 +10,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Dispatch } from "redux";
 import Login from "./Login";
 
-const Admin = asyncComponent(() => import("modules/admin/components"));
+const Admin = asyncComponent(() => import("modules/admin/views"));
 
 type User = RootState["project"]["app"]["curUser"];
 

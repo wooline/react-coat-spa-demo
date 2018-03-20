@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "outDir": "./dist",
+    "baseUrl": "src",
+    "outDir": "build/dist",
     "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "node",
+    "target": "es5",
+    "lib": ["es6", "dom"],
     "sourceMap": true,
     "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "jsx": "preserve",
-    "lib": ["dom", "es2017"],
+    "jsx": "react",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "importHelpers": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
@@ -17,8 +18,8 @@
     "noImplicitAny": false,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
   "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest"]
 }

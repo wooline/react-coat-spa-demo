@@ -1,4 +1,4 @@
-import app from "modules/app/components";
+import appViews from "modules/app/views";
 import { createApp } from "react-coat";
 
-createApp(app.Main, "root");
+createApp(appViews.Main, "root");

@@ -23,7 +23,7 @@ class Component extends React.PureComponent<Props, State> {
     const { dispatch, hasLogined, logining, location } = this.props;
     const { from } = location.state || { from: { pathname: "/" } };
     function login(evt) {
-      dispatch(thisModule.actions._login({ username: "", password: "" }) as any);
+      dispatch(thisModule.actions.login({ username: "", password: "" }) as any);
     }
     return hasLogined ? (
       <Redirect to={from} />

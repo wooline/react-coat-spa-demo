@@ -1,15 +1,11 @@
 {
-  "name": "jsreact",
+  "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^16.2.0",
-    "react-coat": "^0.2.0",
-    "react-dom": "^16.2.0",
-    "react-redux": "^5.0.7",
-    "redux": "^3.7.2"
-  },
   "dllDependencies": {
+    "polyfill": [
+      "babel-polyfill"
+    ],
     "react": [
       "react",
       "react-dom",
@@ -26,166 +22,117 @@
       "react-coat"
     ]
   },
+  "dependencies": {
+    "autoprefixer": "7.1.6",
+    "babel-polyfill": "^6.26.0",
+    "react": "^16.2.0",
+    "react-coat": "^0.3.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.40",
-    "@babel/core": "^7.0.0-beta.40",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.40",
-    "@babel/plugin-proposal-decorators": "^7.0.0-beta.40",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.40",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.40",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.40",
-    "@babel/polyfill": "^7.0.0-beta.40",
-    "@babel/preset-env": "^7.0.0-beta.40",
-    "@babel/preset-react": "^7.0.0-beta.40",
-    "@babel/runtime": "^7.0.0-beta.40",
-    "@types/node": "^4.0.35",
-    "@types/react": "^16.0.34",
-    "@types/react-dom": "^16.0.3",
-    "@types/react-redux": "^5.0.14",
-    "@types/react-router-dom": "^4.2.3",
+    "@types/jest": "^22.2.0",
+    "@types/node": "^9.4.7",
+    "@types/react": "^16.0.40",
+    "@types/react-dom": "^16.0.4",
     "autodll-webpack-plugin": "^0.3.9",
-    "autoprefixer": "8.0.0",
-    "babel-eslint": "8.2.2",
-    "babel-jest": "20.0.3",
-    "babel-loader": "^8.0.0-beta.2",
+    "babel-jest": "^22.1.0",
+    "babel-loader": "^7.1.2",
     "babel-preset-react-app": "^3.1.1",
-    "babel-runtime": "6.26.0",
-    "body-parser": "^1.18.2",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
-    "concurrently": "^3.5.1",
-    "connect": "^3.6.6",
-    "cookie-parser": "^1.4.3",
-    "css-loader": "0.28.10",
+    "css-loader": "0.28.7",
     "dotenv": "4.0.0",
-    "dotenv-expand": "4.2.0",
-    "eslint": "^4.17.0",
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-config-standard-jsx": "^4.0.2",
-    "eslint-config-standard-react": "^5.0.0",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^6.0.0",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-react": "^7.6.1",
-    "eslint-plugin-standard": "^3.0.1",
-    "express-session": "^1.15.6",
     "extract-text-webpack-plugin": "3.0.2",
-    "file-loader": "1.1.5",
-    "fork-ts-checker-webpack-plugin": "^0.4.0",
+    "file-loader": "0.11.2",
+    "fork-ts-checker-webpack-plugin": "^0.2.8",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
-    "jest": "20.0.4",
+    "jest": "22.1.4",
     "less": "^3.0.1",
-    "less-loader": "^4.0.6",
-    "nodemon": "^1.17.1",
+    "less-loader": "^4.1.0",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
+    "promise": "8.0.1",
     "raf": "3.4.0",
-    "react": "^16.2.0",
-    "react-dev-utils": "^5.0.0",
-    "react-dom": "^16.2.0",
-    "serve-static": "^1.13.2",
-    "source-map-loader": "^0.2.3",
-    "style-loader": "0.20.2",
-    "stylelint": "^9.1.1",
+    "react-dev-utils": "4.2.1",
+    "source-map-loader": "^0.2.1",
+    "style-loader": "0.19.0",
+    "stylelint": "^9.1.3",
     "stylelint-config-standard": "^18.2.0",
     "stylelint-webpack-plugin": "^0.10.3",
     "sw-precache-webpack-plugin": "0.11.4",
-    "ts-loader": "3.5.0",
-    "ts-node": "^5.0.1",
-    "tslint": "^5.9.1",
+    "ts-jest": "22.0.1",
+    "ts-loader": "^2.3.7",
+    "tsconfig-paths-webpack-plugin": "^2.0.0",
+    "tslint": "^5.7.0",
     "tslint-config-standard": "^7.0.0",
-    "tslint-react": "^3.5.1",
+    "tslint-react": "^3.2.0",
     "typescript": "^2.7.2",
-    "uglifyjs-webpack-plugin": "^1.2.2",
+    "uglifyjs-webpack-plugin": "^1.1.8",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
-    "webpack-manifest-plugin": "1.3.2"
+    "webpack-manifest-plugin": "1.3.2",
+    "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "concurrently \"npm run dev\" \"npm run mock\"",
-    "dev": "node scripts/start.js",
+    "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
-    "mock": "nodemon"
+    "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
+      "src/**/*.{js,jsx,ts,tsx}"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
-      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
+      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
     "moduleFileExtensions": [
-      "js",
-      "jsx",
+      "mjs",
+      "web.ts",
       "ts",
+      "web.tsx",
       "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
       "node"
-    ]
-  },
-  "nodemonConfig": {
-    "watch": [
-      "mock_server/"
     ],
-    "ext": "ts js json",
-    "delay": "1000",
-    "exec": "ts-node --typeCheck true --compilerOptions \"{\\\"module\\\":\\\"commonjs\\\"}\" mock_server/index.ts"
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "C:\\work\\wooline\\my-app\\tsconfig.test.json"
+      }
+    }
   },
-  "browserslist": [
-    "chrome >= 63"
-  ],
   "babel": {
     "presets": [
-      [
-        "@babel/react"
-      ],
-      [
-        "@babel/env",
-        {
-          "useBuiltIns": "usage",
-          "debug": false,
-          "modules": false,
-          "targets": {}
-        }
-      ]
-    ],
-    "plugins": [
-      [
-        "@babel/plugin-transform-runtime",
-        {
-          "useBuiltIns": true
-        }
-      ],
-      "@babel/plugin-proposal-decorators",
-      [
-        "@babel/plugin-proposal-class-properties",
-        {
-          "loose": true
-        }
-      ],
-      "@babel/plugin-proposal-object-rest-spread",
-      "@babel/plugin-syntax-dynamic-import"
+      "react-app"
     ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }
