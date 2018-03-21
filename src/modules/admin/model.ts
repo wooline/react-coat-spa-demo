@@ -2,6 +2,7 @@ import thisModule from "modules/admin";
 import { BaseActions, BaseState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat";
 import { call, put } from "redux-saga/effects";
 import * as todoService from "./api/todo";
+import namespace from "./namespace";
 
 interface State extends BaseState {
   todos: string[];
@@ -21,10 +22,12 @@ class ModuleActions extends BaseActions<State> {
 }
 
 class ModuleHandlers {
-  @buildLoading()
-  "app/INIT" = buildActionByEffect(function*(data: State, moduleState: State, rootState: any): any {
-    const todos: todoService.GetTodosResponse = yield call(todoService.getTodos);
-    yield put(thisModule.actions.updateTodos(todos.list));
+  @buildLoading(namespace)
+  "@@router/LOCATION_CHANGE" = buildActionByEffect(function*({ pathname }: { pathname: string }, moduleState: State, rootState: any): any {
+    if (pathname === "/admin") {
+      const todos: todoService.GetTodosResponse = yield call(todoService.getTodos);
+      yield put(thisModule.actions.updateTodos(todos.list));
+    }
   });
 }
 

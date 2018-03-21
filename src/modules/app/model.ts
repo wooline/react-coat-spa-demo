@@ -3,6 +3,7 @@ import { BaseActions, BaseState, buildActionByEffect, buildActionByReducer, buil
 import { call, put } from "redux-saga/effects";
 import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
+import namespace from "./namespace";
 
 interface State extends BaseState {
   projectConfig: {
@@ -41,7 +42,7 @@ class ModuleActions extends BaseActions<State> {
   updateCurUser = buildActionByReducer(function(curUser: { uid: string; username: string }, moduleState: State, rootState: any): State {
     return { ...moduleState, curUser };
   });
-  @buildLoading()
+  @buildLoading(namespace, "login")
   login = buildActionByEffect(function*({ username, password }: { username: string; password: string }): any {
     const curUser: sessionService.LoginResponse = yield call(sessionService.login, username, password);
     yield put(thisModule.actions.updateCurUser(curUser));
@@ -53,7 +54,7 @@ class ModuleHandlers {
     console.log(message);
     return moduleState;
   });
-  @buildLoading("app", "init")
+  @buildLoading()
   "app/INIT" = buildActionByEffect(function*(data: State, moduleState: State, rootState: any): any {
     const config: settingsService.GetSettingsResponse = yield call(settingsService.getSettings);
     yield put(thisModule.actions.updateSettings(config));
