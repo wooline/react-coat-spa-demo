@@ -1,16 +1,16 @@
+import React from "react";
+import { Dispatch } from "redux";
+import { connect } from "react-redux";
+import { asyncComponent } from "react-coat";
+import { Redirect, Route, Switch } from "react-coat/router-dom";
 import Loading from "components/Loading";
 import NotFound from "components/NotFound";
 import VerifyRoute, { AuthState } from "components/ProtectedRoute";
 import RootState from "core/RootState";
-import { hasLogin } from "helper/user";
-import React from "react";
-import { asyncComponent } from "react-coat";
-import { connect } from "react-redux";
-import { Redirect, Route, Switch } from "react-router-dom";
-import { Dispatch } from "redux";
+
 import Login from "./Login";
 
-const Admin = asyncComponent(() => import("modules/admin/views"));
+const Admin = asyncComponent(() => import(/* webpackChunkName: "admin" */ "modules/admin/views"));
 
 type User = RootState["project"]["app"]["curUser"];
 
@@ -25,7 +25,7 @@ interface OwnProps {}
 interface State {}
 
 function hasAuth(path: string, curUser: User): AuthState {
-  return hasLogin(curUser) ? AuthState.Authorized : AuthState.Forbidden;
+  return curUser.hasLogin ? AuthState.Authorized : AuthState.Forbidden;
 }
 
 class Component extends React.PureComponent<Props, State> {
@@ -34,7 +34,8 @@ class Component extends React.PureComponent<Props, State> {
     return (
       <div>
         <Switch>
-          <Redirect exact path="/" to="/admin" />
+          <Redirect exact path="/" to="/admin/todos" />
+          <Redirect exact path="/admin" to="/admin/todos" />
           <VerifyRoute auth={projectConfigLoaded && curUserLoaded ? hasAuth("/admin", curUser) : AuthState.Pending} path="/admin" component={Admin} />
           <VerifyRoute auth={projectConfigLoaded && curUserLoaded ? AuthState.Authorized : AuthState.Pending} path="/login" exact component={Login} />
           <Route component={NotFound} />

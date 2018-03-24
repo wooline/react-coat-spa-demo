@@ -1,6 +1,6 @@
 import { buildViews } from "react-coat";
-import model from "../model";
-import namespace from "../namespace";
 import Main from "./Main";
+import { NAMESPACE } from "../actionNames";
+import model from "../model";
 
-export default buildViews(namespace, { Main }, model);
+export default buildViews(NAMESPACE, { Main }, model);

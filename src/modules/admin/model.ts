@@ -1,33 +1,33 @@
-import thisModule from "modules/admin";
-import { BaseActions, BaseState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat";
+import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat";
 import { call, put } from "redux-saga/effects";
-import * as todoService from "./api/todo";
-import namespace from "./namespace";
+import * as messageService from "./api/message";
+import thisModule from "./index";
+import RootState from "core/RootState";
+import * as actionNames from "./actionNames";
 
-interface State extends BaseState {
-  todos: string[];
+// 定义本模块的State
+interface State extends BaseModuleState {
+  messageList: string[];
 }
-
+// 定义本模块State的初始值
 const state: State = {
-  todos: [],
+  messageList: [],
   loading: {
     global: "Stop"
   }
 };
-
-class ModuleActions extends BaseActions<State> {
-  updateTodos = buildActionByReducer(function(todos: string[], moduleState: State, rootState: any): State {
-    return { ...moduleState, todos };
+// 定义本模块的Action
+class ModuleActions {
+  [actionNames.UPDATE_MESSAGE_LIST] = buildActionByReducer(function(messageList: string[], moduleState: State, rootState: RootState): State {
+    return { ...moduleState, messageList };
   });
 }
-
+// 定义本模块的监听
 class ModuleHandlers {
-  @buildLoading(namespace)
-  "@@router/LOCATION_CHANGE" = buildActionByEffect(function*({ pathname }: { pathname: string }, moduleState: State, rootState: any): any {
-    if (pathname === "/admin") {
-      const todos: todoService.GetTodosResponse = yield call(todoService.getTodos);
-      yield put(thisModule.actions.updateTodos(todos.list));
-    }
+  @buildLoading()
+  [actionNames.INIT] = buildActionByEffect(function*({ pathname }: { pathname: string }, moduleState: State, rootState: RootState) {
+    const messageList: messageService.GetMessageListResponse = yield call(messageService.api.getMessageList);
+    yield put(thisModule.actions.admin_updateMessageList(messageList.list));
   });
 }
 

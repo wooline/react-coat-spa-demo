@@ -16,6 +16,10 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
+"@types/history@*":
+  version "4.6.2"
+  resolved "http://registry.npm.taobao.org/@types/history/download/@types/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
+
 "@types/jest@^22.2.0":
   version "22.2.0"
   resolved "http://registry.npm.taobao.org/@types/jest/download/@types/jest-22.2.0.tgz#55ce83139f7ad1b48b414c3927746614c6963c0f"
@@ -29,6 +33,28 @@
   resolved "http://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-16.0.4.tgz#2e8fd45f5443780ed49bf2cdd9809e6091177a7d"
   dependencies:
     "@types/node" "*"
+    "@types/react" "*"
+
+"@types/react-redux@^5.0.15":
+  version "5.0.15"
+  resolved "http://registry.npm.taobao.org/@types/react-redux/download/@types/react-redux-5.0.15.tgz#420af2c702ac7aab321cf45bb7d3cb2503dd24d5"
+  dependencies:
+    "@types/react" "*"
+    redux "^3.6.0"
+
+"@types/react-router-dom@^4.2.5":
+  version "4.2.5"
+  resolved "http://registry.npm.taobao.org/@types/react-router-dom/download/@types/react-router-dom-4.2.5.tgz#a6fc921f1008567eae35244e30f34f5f7655d5f0"
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
+"@types/react-router@*":
+  version "4.0.23"
+  resolved "http://registry.npm.taobao.org/@types/react-router/download/@types/react-router-4.0.23.tgz#d0509dcbdb1c686aed8f3d5cb186f42e5fbe7c2a"
+  dependencies:
+    "@types/history" "*"
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^16.0.40":
@@ -6285,7 +6311,7 @@ redux-saga@^0.16.0:
   version "0.16.0"
   resolved "http://registry.npm.taobao.org/redux-saga/download/redux-saga-0.16.0.tgz#0a231db0a1489301dd980f6f2f88d8ced418f724"
 
-redux@^3.7.2:
+redux@^3.6.0, redux@^3.7.2:
   version "3.7.2"
   resolved "http://registry.npm.taobao.org/redux/download/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:

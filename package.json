@@ -3,8 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dllDependencies": {
-    "polyfill": ["babel-polyfill"],
-    "react": ["react", "react-dom", "redux", "react-redux", "history", "history/DOMUtils", "history/LocationUtils", "history/PathUtils", "react-router-redux", "react-router-dom", "redux-saga", "redux-saga/effects"]
+    "polyfill": [
+      "babel-polyfill"
+    ],
+    "react": [
+      "react",
+      "react-dom",
+      "redux",
+      "react-redux",
+      "history",
+      "history/DOMUtils",
+      "history/LocationUtils",
+      "history/PathUtils",
+      "react-router-redux",
+      "react-router-dom",
+      "redux-saga",
+      "redux-saga/effects"
+    ]
   },
   "dependencies": {
     "autoprefixer": "7.1.6",
@@ -20,6 +35,8 @@
     "@types/node": "^9.4.7",
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
+    "@types/react-redux": "^5.0.15",
+    "@types/react-router-dom": "^4.2.5",
     "autodll-webpack-plugin": "^0.3.9",
     "babel-jest": "^22.1.0",
     "babel-loader": "^7.1.2",
@@ -68,9 +85,16 @@
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
-    "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}"],
-    "setupFiles": ["<rootDir>/config/polyfills.js"],
-    "testMatch": ["<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)", "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
+    ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
@@ -79,11 +103,25 @@
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"],
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
+    ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
-    "moduleFileExtensions": ["mjs", "web.ts", "ts", "web.tsx", "tsx", "web.js", "js", "web.jsx", "jsx", "json", "node"],
+    "moduleFileExtensions": [
+      "mjs",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
+      "node"
+    ],
     "globals": {
       "ts-jest": {
         "tsConfigFile": "C:\\work\\wooline\\my-app\\tsconfig.test.json"
@@ -91,7 +129,9 @@
     }
   },
   "babel": {
-    "presets": ["react-app"]
+    "presets": [
+      "react-app"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
