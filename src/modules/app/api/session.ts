@@ -18,7 +18,7 @@ export class API {
     return Promise.resolve({ uid: "0", username: "guest", hasLogin: false });
   }
   // mock一个耗时3秒的异步请求
-  @delayPromise(3)
+  @delayPromise(2)
   login(username: string, password: string): Promise<LoginResponse> {
     return Promise.resolve({ uid: "1", username: "jimmy", hasLogin: true });
   }

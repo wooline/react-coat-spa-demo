@@ -1,6 +1,10 @@
 import RootState from "core/RootState";
-import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildModel, LOCATION_CHANGE_ACTION_NAME } from "react-coat";
+import {
+    BaseModuleState, buildActionByEffect, buildActionByReducer, buildModel,
+    LOCATION_CHANGE_ACTION_NAME,
+} from "react-coat";
 import { call, put } from "redux-saga/effects";
+
 import * as actionNames from "./actionNames";
 import * as todoService from "./api/todos";
 import thisModule from "./index";
@@ -13,8 +17,8 @@ interface State extends BaseModuleState {
 const state: State = {
   todosList: [],
   loading: {
-    global: "Stop"
-  }
+    global: "Stop",
+  },
 };
 // 定义本模块的Action
 class ModuleActions {

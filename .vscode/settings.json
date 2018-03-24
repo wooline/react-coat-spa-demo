@@ -3,12 +3,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "prettier.stylelintIntegration": true,
   "editor.formatOnSave": true,
-  "typescript.extension.sortImports.sortMethod": "path",
-  "typescript.extension.sortImports.maxNamedImportsInSingleLine": 20,
-  "typescript.extension.sortImports.pathSortOrder": [
-    "package",
-    "relativeDownLevel",
-    "relativeUpLevel"
-  ],
-  "git.ignoreLimitWarning": true
+  "importSorter.generalConfiguration.sortOnBeforeSave": true,
+  "importSorter.importStringConfiguration.quoteMark": "double",
+  "importSorter.importStringConfiguration.trailingComma": "multiLine"
 }

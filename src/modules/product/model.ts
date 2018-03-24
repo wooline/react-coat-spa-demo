@@ -1,9 +1,13 @@
-import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildModel, LOCATION_CHANGE_ACTION_NAME } from "react-coat";
-import { call, put } from "redux-saga/effects";
 import RootState from "core/RootState";
+import {
+    BaseModuleState, buildActionByEffect, buildActionByReducer, buildModel,
+    LOCATION_CHANGE_ACTION_NAME,
+} from "react-coat";
+import { call, put } from "redux-saga/effects";
+
+import * as actionNames from "./actionNames";
 import * as productService from "./api/product";
 import thisModule from "./index";
-import * as actionNames from "./actionNames";
 
 // 定义本模块的State
 interface State extends BaseModuleState {
@@ -13,8 +17,8 @@ interface State extends BaseModuleState {
 const state: State = {
   productList: [],
   loading: {
-    global: "Stop"
-  }
+    global: "Stop",
+  },
 };
 // 定义本模块的Action
 class ModuleActions {

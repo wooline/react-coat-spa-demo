@@ -296,8 +296,7 @@ module.exports = {
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     // Perform type checking and linting in a separate process to speed up compilation
     new ForkTsCheckerWebpackPlugin({
-      async: false,
-      watch: paths.appSrc,
+      async: true,
       tsconfig: paths.appTsConfig,
       tslint: paths.appTsLint,
     }),

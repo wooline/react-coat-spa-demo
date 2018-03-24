@@ -1,8 +1,8 @@
-import * as React from "react";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
-import RootState from "core/RootState";
 import Loading from "components/Loading";
+import RootState from "core/RootState";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
 import "./Main.less";
 
@@ -35,7 +35,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const data = state.project.product;
   return {
     globalLoading: data.loading.global,
-    productList: data.productList
+    productList: data.productList,
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch<string>, ownProps: OwnProps) => {

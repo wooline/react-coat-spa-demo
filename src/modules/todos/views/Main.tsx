@@ -1,10 +1,10 @@
-import * as React from "react";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
-import RootState from "core/RootState";
 import Loading from "components/Loading";
+import RootState from "core/RootState";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
-require("./Main.less");
+import "./Main.less";
 
 interface Props {
   globalLoading: string;
@@ -35,7 +35,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const data = state.project.todos;
   return {
     globalLoading: data.loading.global,
-    todosList: data.todosList
+    todosList: data.todosList,
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch<string>, ownProps: OwnProps) => {

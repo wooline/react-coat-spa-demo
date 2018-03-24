@@ -2,10 +2,10 @@ import RootState from "core/RootState";
 import thisModule from "modules/app";
 import * as React from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { Dispatch } from "redux";
-import { Redirect } from "react-coat/router-dom";
 
-require("./Login.less");
+import "./Login.less";
 
 interface Props {
   dispatch: Dispatch<any>;
@@ -30,7 +30,7 @@ class Component extends React.PureComponent<Props, State> {
     return hasLogined ? (
       <Redirect to={from} />
     ) : (
-      <form className="app-login" onSubmit={e => login(e)}>
+      <form className="app-login" onSubmit={login}>
         <h3>请登录</h3>
         <ul>
           <li>
@@ -53,12 +53,12 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const loginLoading = state.project.app.loading.login;
   return {
     hasLogined: curUser.uid && curUser.uid !== "0",
-    logining: Boolean(loginLoading && loginLoading !== "Stop")
+    logining: Boolean(loginLoading && loginLoading !== "Stop"),
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch<string>, ownProps: OwnProps) => {
   return {
-    dispatch
+    dispatch,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Component);

@@ -1,8 +1,8 @@
-import React, { PureComponent } from "react";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
-import { Link } from "react-coat/router-dom";
 import RootState from "core/RootState";
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Dispatch } from "redux";
 
 type User = RootState["project"]["app"]["curUser"];
 
@@ -39,7 +39,7 @@ class Component extends PureComponent<Props, State> {
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   return {
     curUser: state.project.app.curUser,
-    messageList: state.project.admin.messageList
+    messageList: state.project.admin.messageList,
   };
 };
 const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps) => {

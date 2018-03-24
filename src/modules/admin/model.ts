@@ -1,9 +1,9 @@
+import RootState from "core/RootState";
 import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat";
 import { call, put } from "redux-saga/effects";
+import * as actionNames from "./actionNames";
 import * as messageService from "./api/message";
 import thisModule from "./index";
-import RootState from "core/RootState";
-import * as actionNames from "./actionNames";
 
 // 定义本模块的State
 interface State extends BaseModuleState {
@@ -13,8 +13,8 @@ interface State extends BaseModuleState {
 const state: State = {
   messageList: [],
   loading: {
-    global: "Stop"
-  }
+    global: "Stop",
+  },
 };
 // 定义本模块的Action
 class ModuleActions {

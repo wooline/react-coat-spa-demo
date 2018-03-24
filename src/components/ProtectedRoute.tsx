@@ -1,11 +1,12 @@
 import React, { ComponentType } from "react";
 import { Redirect, Route, RouteComponentProps, RouteProps } from "react-router-dom";
+
 import Startup from "./Startup";
 
 export enum AuthState {
   Pending,
   Authorized,
-  Forbidden
+  Forbidden,
 }
 
 interface Props extends RouteProps {
@@ -14,11 +15,11 @@ interface Props extends RouteProps {
 }
 interface State {}
 
-function render(auth: AuthState, props: RouteComponentProps<any>, Component: ComponentType<any>) {
+function render(auth: AuthState, props: RouteComponentProps<any>, TargetComponent: ComponentType<any>) {
   if (auth === AuthState.Pending) {
     return <Startup />;
   } else if (auth === AuthState.Authorized) {
-    return <Component {...props} />;
+    return <TargetComponent {...props} />;
   } else {
     return <Redirect to={{ pathname: "/login", state: { from: props.location } }} />;
   }
@@ -26,7 +27,10 @@ function render(auth: AuthState, props: RouteComponentProps<any>, Component: Com
 
 const Component = function(props: Props, state: State) {
   const { auth, component, ...rest } = props;
-  return <Route {...rest} render={props => render(auth, props, component)} />;
+  const toRender = props2 => {
+    return render(auth, props2, component);
+  };
+  return <Route {...rest} render={toRender} />;
 };
 
 export default Component;

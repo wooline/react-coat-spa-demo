@@ -26,7 +26,7 @@
     "autoprefixer": "7.1.6",
     "babel-polyfill": "^6.26.0",
     "react": "^16.2.0",
-    "react-coat": "^0.3.0",
+    "react-coat": "^1.1.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2"
@@ -70,7 +70,6 @@
     "ts-loader": "^2.3.7",
     "tsconfig-paths-webpack-plugin": "^2.0.0",
     "tslint": "^5.7.0",
-    "tslint-config-standard": "^7.0.0",
     "tslint-react": "^3.2.0",
     "typescript": "^2.7.2",
     "uglifyjs-webpack-plugin": "^1.1.8",

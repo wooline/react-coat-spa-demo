@@ -1,5 +1,7 @@
 import { delayPromise, setLoading } from "react-coat";
+
 import { NAMESPACE } from "../actionNames";
+
 export interface GetTodosListResponse {
   list: string[];
 }

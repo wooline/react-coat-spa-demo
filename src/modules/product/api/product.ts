@@ -1,5 +1,7 @@
-import { setLoading, delayPromise } from "react-coat";
+import { delayPromise, setLoading } from "react-coat";
+
 import { NAMESPACE } from "../actionNames";
+
 export interface GetProductListResponse {
   list: string[];
 }

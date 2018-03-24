@@ -1,4 +1,5 @@
 import { delayPromise } from "react-coat";
+
 export interface GetMessageListResponse {
   list: string[];
 }

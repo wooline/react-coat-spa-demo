@@ -1,10 +1,11 @@
-import React from "react";
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
-import { asyncComponent } from "react-coat";
-import { Route, match } from "react-coat/router-dom";
-import GlobalHeader from "./GlobalHeader";
 import RootState from "core/RootState";
+import React from "react";
+import { asyncComponent } from "react-coat";
+import { connect } from "react-redux";
+import { match, Route } from "react-router-dom";
+import { Dispatch } from "redux";
+
+import GlobalHeader from "./GlobalHeader";
 
 const Product = asyncComponent(() => import(/* webpackChunkName: "product" */ "modules/product/views"));
 const Todos = asyncComponent(() => import(/* webpackChunkName: "todos" */ "modules/todos/views"));
@@ -19,14 +20,14 @@ interface State {}
 
 class Component extends React.PureComponent<Props, State> {
   render() {
+    // tslint:disable-next-line:no-shadowed-variable
     const { match } = this.props;
-    console.log(match, this.props);
     return (
       <div>
         <GlobalHeader />
         <div>
-          <Route exact path={`${match.url}/todos`} component={Todos} />
-          <Route exact path={`${match.url}/product`} component={Product} />
+          <Route exact={true} path={`${match.url}/todos`} component={Todos} />
+          <Route exact={true} path={`${match.url}/product`} component={Product} />
         </div>
       </div>
     );

@@ -1,4 +1,5 @@
 import { delayPromise } from "react-coat";
+
 export interface GetSettingsResponse {
   title: string;
 }
@@ -8,6 +9,9 @@ export class API {
   @delayPromise(3)
   getSettings(): Promise<GetSettingsResponse> {
     return Promise.resolve({ title: "Hello world" });
+  }
+  reportError(error: any): Promise<boolean> {
+    return Promise.resolve(true);
   }
 }
 
