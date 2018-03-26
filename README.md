@@ -65,4 +65,4 @@ src
 
 ### 后记
 
-> 欢迎各位高人批评指正，如有错误或 Bug 请反馈或 Email：wooline@qq.com
+> 欢迎各位高人批评指正，觉得还不错的别忘了给个`Star` >\_<，如有错误或 Bug 请反馈或 Email：wooline@qq.com
