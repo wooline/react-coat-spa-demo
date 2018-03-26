@@ -21,7 +21,7 @@
 * `yarn install`
 * `yarn start`
 * 本 Demo 使用 vscode 作为 IDE 开发工具，如果你也选择它，你可以安装以下插件来辅助开发：
-  ![react-coat IDE](https://github.com/wooline/react-coat-demo-simple/docs/imgs/ide.png)
+  ![react-coat IDE](https://github.com/wooline/react-coat-demo-simple/blob/master/docs/imgs/ide.gif)
 
 本项目基本目录结构如下
 
