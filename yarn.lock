@@ -6102,9 +6102,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-coat@^0.4.0:
-  version "0.4.0"
-  resolved "http://registry.npm.taobao.org/react-coat/download/react-coat-0.4.0.tgz#40cdc643781a5baacece0bafe3b09e46f604befe"
+react-coat@^1.1.0:
+  version "1.1.0"
+  resolved "http://registry.npm.taobao.org/react-coat/download/react-coat-1.1.0.tgz#12229f87e3391f68a092ef914fe3f9e1b6a64b39"
   dependencies:
     "@types/history" "^4.6.2"
     "@types/react" "^16.0.38"
