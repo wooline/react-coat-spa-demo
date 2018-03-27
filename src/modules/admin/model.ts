@@ -1,6 +1,9 @@
 import RootState from "core/RootState";
-import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat";
+import {
+    BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel,
+} from "react-coat-pkg";
 import { call, put } from "redux-saga/effects";
+
 import * as actionNames from "./actionNames";
 import * as messageService from "./api/message";
 import thisModule from "./index";

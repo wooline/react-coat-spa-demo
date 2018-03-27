@@ -2,7 +2,7 @@ import RootState from "core/RootState";
 import {
     BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel,
     ERROR_ACTION_NAME,
-} from "react-coat";
+} from "react-coat-pkg";
 import { call, put } from "redux-saga/effects";
 
 import * as actionNames from "./actionNames";

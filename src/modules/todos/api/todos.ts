@@ -1,4 +1,4 @@
-import { delayPromise, setLoading } from "react-coat";
+import { delayPromise, setLoading } from "react-coat-pkg";
 
 import { NAMESPACE } from "../actionNames";
 

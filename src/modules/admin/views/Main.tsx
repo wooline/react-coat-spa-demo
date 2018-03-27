@@ -1,6 +1,6 @@
 import RootState from "core/RootState";
 import React from "react";
-import { asyncComponent } from "react-coat";
+import { asyncComponent } from "react-coat-pkg";
 import { connect } from "react-redux";
 import { match, Route } from "react-router-dom";
 import { Dispatch } from "redux";

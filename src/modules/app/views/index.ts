@@ -1,4 +1,4 @@
-import { buildViews } from "react-coat";
+import { buildViews } from "react-coat-pkg";
 
 import { NAMESPACE } from "../actionNames";
 import model from "../model";

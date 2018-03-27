@@ -1,4 +1,4 @@
-import { buildModule } from "react-coat";
+import { buildModule } from "react-coat-pkg";
 
 import { NAMESPACE } from "./actionNames";
 import { Actions, State as ModuleState } from "./model";

@@ -3,7 +3,7 @@ import NotFound from "components/NotFound";
 import VerifyRoute, { AuthState } from "components/ProtectedRoute";
 import RootState from "core/RootState";
 import React from "react";
-import { asyncComponent } from "react-coat";
+import { asyncComponent } from "react-coat-pkg";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { Dispatch } from "redux";

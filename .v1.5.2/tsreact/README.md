@@ -595,11 +595,11 @@ Then we can change `start` and `build` scripts to include the CSS preprocessor c
    "scripts": {
      "build-css": "node-sass-chokidar src/ -o src/",
      "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
--    "start": "react-scripts start",
--    "build": "react-scripts build",
-+    "start-js": "react-scripts start",
+-    "start": "react-scripts-ts start",
+-    "build": "react-scripts-ts build",
++    "start-js": "react-scripts-ts start",
 +    "start": "npm-run-all -p watch-css start-js",
-+    "build": "npm run build-css && react-scripts build",
++    "build": "npm run build-css && react-scripts-ts build",
      "test": "react-scripts test --env=jsdom",
      "eject": "react-scripts eject"
    }
@@ -638,7 +638,9 @@ declare module "*.gif";
 declare module "*.jpg";
 declare module "*.jpeg";
 declare module "*.png";
+declare module "*.svg";
 ```
+(you'll have to restart the compiler in order the changes to take place)
 
 In this case, we've added several image file extensions as valid module formats.
 
@@ -646,7 +648,7 @@ Now that the compiler is configured, here is an example of importing an image fi
 
 ```js
 import React from 'react';
-import logo from './logo.png'; // Tell Webpack this JS file uses this image
+import logo from './logo.svg'; // Tell Webpack this JS file uses this image
 
 console.log(logo); // /logo.84287d09.png
 
@@ -1261,7 +1263,7 @@ Different projects choose different testing tradeoffs based on how often compone
 
 ```ts
 import * as React from 'react';
-import * asReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import App from './App';
 
 it('renders without crashing', () => {

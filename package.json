@@ -1,26 +1,33 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
+  "name": "react-coat-demo-simple",
+  "version": "1.0.0",
   "private": true,
   "dllDependencies": {
-    "polyfill": ["babel-polyfill"],
-    "react": ["react", "react-dom", "redux", "react-redux", "history", "history/DOMUtils", "history/LocationUtils", "history/PathUtils", "react-router-redux", "react-router-dom", "redux-saga", "redux-saga/effects", "react-coat"]
+    "polyfill": [
+      "babel-polyfill"
+    ],
+    "react": [
+      "react",
+      "react-dom",
+      "redux",
+      "react-redux",
+      "history",
+      "history/DOMUtils",
+      "history/LocationUtils",
+      "history/PathUtils",
+      "react-router-redux",
+      "react-router-dom",
+      "redux-saga",
+      "redux-saga/effects",
+      "react-coat"
+    ]
   },
   "dependencies": {
-    "autoprefixer": "7.1.6",
-    "babel-polyfill": "^6.26.0",
-    "react": "^16.2.0",
-    "react-coat": "^1.1.0",
-    "react-dom": "^16.2.0",
-    "react-redux": "^5.0.7",
-    "redux": "^3.7.2"
-  },
-  "devDependencies": {
-    "@types/jest": "^22.2.0",
-    "@types/node": "^9.4.7",
     "autodll-webpack-plugin": "^0.3.9",
+    "autoprefixer": "7.1.6",
     "babel-jest": "^22.1.0",
     "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^3.1.1",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
@@ -28,7 +35,7 @@
     "dotenv": "4.0.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "0.11.2",
-    "fork-ts-checker-webpack-plugin": "^0.4.1",
+    "fork-ts-checker-webpack-plugin": "^0.2.8",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
     "jest": "22.1.4",
@@ -39,6 +46,7 @@
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
     "raf": "3.4.0",
+    "react-coat-pkg": "^1.1.1",
     "react-dev-utils": "4.2.1",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",
@@ -51,7 +59,6 @@
     "tsconfig-paths-webpack-plugin": "^2.0.0",
     "tslint": "^5.7.0",
     "tslint-react": "^3.2.0",
-    "typescript": "^2.7.2",
     "uglifyjs-webpack-plugin": "^1.1.8",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",
@@ -64,10 +71,22 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "@types/node": "^9.6.0",
+    "typescript": "^2.7.2"
+  },
   "jest": {
-    "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}"],
-    "setupFiles": ["<rootDir>/config/polyfills.js"],
-    "testMatch": ["<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)", "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/config/polyfills.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).(j|t)s?(x)"
+    ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
@@ -76,11 +95,25 @@
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
-    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"],
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
+    ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
-    "moduleFileExtensions": ["mjs", "web.ts", "ts", "web.tsx", "tsx", "web.js", "js", "web.jsx", "jsx", "json", "node"],
+    "moduleFileExtensions": [
+      "mjs",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
+      "node"
+    ],
     "globals": {
       "ts-jest": {
         "tsConfigFile": "C:\\work\\wooline\\my-app\\tsconfig.test.json"
@@ -88,7 +121,9 @@
     }
   },
   "babel": {
-    "presets": ["react-app"]
+    "presets": [
+      "react-app"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"

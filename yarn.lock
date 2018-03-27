@@ -20,11 +20,11 @@
   version "4.6.2"
   resolved "http://registry.npm.taobao.org/@types/history/download/@types/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
 
-"@types/jest@^22.2.0":
+"@types/jest@^22.2.2":
   version "22.2.2"
   resolved "http://registry.npm.taobao.org/@types/jest/download/@types/jest-22.2.2.tgz#afe5dacbd00d65325f52da0ed3e76e259629ac9d"
 
-"@types/node@*", "@types/node@^9.4.7":
+"@types/node@*", "@types/node@^9.6.0":
   version "9.6.0"
   resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-9.6.0.tgz#d3480ee666df9784b1001a1872a2f6ccefb6c2d7"
 
@@ -2910,9 +2910,9 @@ forever-agent@~0.6.1:
   version "0.6.1"
   resolved "http://registry.npm.taobao.org/forever-agent/download/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
 
-fork-ts-checker-webpack-plugin@^0.4.1:
-  version "0.4.1"
-  resolved "http://registry.npm.taobao.org/fork-ts-checker-webpack-plugin/download/fork-ts-checker-webpack-plugin-0.4.1.tgz#718801621c50c7f20de9c8e6a68a2db228a4081f"
+fork-ts-checker-webpack-plugin@^0.2.8:
+  version "0.2.10"
+  resolved "http://registry.npm.taobao.org/fork-ts-checker-webpack-plugin/download/fork-ts-checker-webpack-plugin-0.2.10.tgz#d0a4080e77e9f5d6e3b43cdce7d26658f9d250c6"
   dependencies:
     babel-code-frame "^6.22.0"
     chalk "^1.1.3"
@@ -2922,9 +2922,6 @@ fork-ts-checker-webpack-plugin@^0.4.1:
     lodash.isstring "^4.0.1"
     lodash.startswith "^4.2.1"
     minimatch "^3.0.4"
-    resolve "^1.5.0"
-    tapable "^1.0.0"
-    vue-parser "^1.1.5"
 
 form-data@~2.1.1:
   version "2.1.4"
@@ -5426,12 +5423,6 @@ parse5@4.0.0:
   version "4.0.0"
   resolved "http://registry.npm.taobao.org/parse5/download/parse5-4.0.0.tgz#6d78656e3da8d78b4ec0b906f7c08ef1dfe3f608"
 
-parse5@^3.0.3:
-  version "3.0.3"
-  resolved "http://registry.npm.taobao.org/parse5/download/parse5-3.0.3.tgz#042f792ffdd36851551cf4e9e066b3874ab45b5c"
-  dependencies:
-    "@types/node" "*"
-
 parseurl@~1.3.2:
   version "1.3.2"
   resolved "http://registry.npm.taobao.org/parseurl/download/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
@@ -6113,9 +6104,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-coat@^1.1.0:
-  version "1.1.0"
-  resolved "http://registry.npm.taobao.org/react-coat/download/react-coat-1.1.0.tgz#12229f87e3391f68a092ef914fe3f9e1b6a64b39"
+react-coat-pkg@^1.1.1:
+  version "1.1.1"
+  resolved "http://registry.npm.taobao.org/react-coat-pkg/download/react-coat-pkg-1.1.1.tgz#06f292e3d3d4baff44e814dbdd8ec053fa28728a"
   dependencies:
     "@types/history" "^4.6.2"
     "@types/react" "^16.0.38"
@@ -6124,8 +6115,12 @@ react-coat@^1.1.0:
     "@types/react-router-dom" "^4.2.4"
     "@types/react-router-redux" "^5.0.12"
     history "^4.7.2"
+    react "^16.2.0"
+    react-dom "^16.2.0"
+    react-redux "^5.0.7"
     react-router-dom "^4.2.2"
     react-router-redux "^5.0.0-alpha.9"
+    redux "^3.7.2"
     redux-saga "^0.16.0"
 
 react-dev-utils@4.2.1:
@@ -6619,7 +6614,7 @@ resolve@1.1.7:
   version "1.1.7"
   resolved "http://registry.npm.taobao.org/resolve/download/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
-resolve@^1.1.7, resolve@^1.3.2, resolve@^1.5.0:
+resolve@^1.1.7, resolve@^1.3.2:
   version "1.6.0"
   resolved "http://registry.npm.taobao.org/resolve/download/resolve-1.6.0.tgz#0fbd21278b27b4004481c395349e7aba60a9ff5c"
   dependencies:
@@ -7385,10 +7380,6 @@ tapable@^0.2.7:
   version "0.2.8"
   resolved "http://registry.npm.taobao.org/tapable/download/tapable-0.2.8.tgz#99372a5c999bf2df160afc0d74bed4f47948cd22"
 
-tapable@^1.0.0:
-  version "1.0.0"
-  resolved "http://registry.npm.taobao.org/tapable/download/tapable-1.0.0.tgz#cbb639d9002eed9c6b5975eb20598d7936f1f9f2"
-
 tar-pack@^3.4.0:
   version "3.4.1"
   resolved "http://registry.npm.taobao.org/tar-pack/download/tar-pack-3.4.1.tgz#e1dbc03a9b9d3ba07e896ad027317eb679a10a1f"
@@ -7983,12 +7974,6 @@ vm-browserify@0.0.4:
   resolved "http://registry.npm.taobao.org/vm-browserify/download/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
   dependencies:
     indexof "0.0.1"
-
-vue-parser@^1.1.5:
-  version "1.1.6"
-  resolved "http://registry.npm.taobao.org/vue-parser/download/vue-parser-1.1.6.tgz#3063c8431795664ebe429c23b5506899706e6355"
-  dependencies:
-    parse5 "^3.0.3"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"

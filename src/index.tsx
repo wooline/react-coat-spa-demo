@@ -1,6 +1,6 @@
 import "assets/global.less";
 import appViews from "modules/app/views";
-import { createApp } from "react-coat";
+import { createApp } from "react-coat-pkg";
 
 /* createApp()还可以传两个参数以自定义扩展Store：
 storeMiddlewares?: Middleware[]
