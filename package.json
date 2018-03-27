@@ -46,7 +46,7 @@
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
     "raf": "3.4.0",
-    "react-coat-pkg": "^1.1.1",
+    "react-coat-pkg": "^1.1.2",
     "react-dev-utils": "4.2.1",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",
