@@ -1,8 +1,5 @@
 import RootState from "core/RootState";
-import {
-    BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel,
-    ERROR_ACTION_NAME,
-} from "react-coat-pkg";
+import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel, ERROR_ACTION_NAME, LoadingState } from "react-coat-pkg";
 import { call, put } from "redux-saga/effects";
 
 import * as actionNames from "./actionNames";
@@ -22,8 +19,8 @@ interface State extends BaseModuleState {
   };
   loginError: string;
   loading: {
-    global: string;
-    login: string;
+    global: LoadingState;
+    login: LoadingState;
   };
 }
 // 定义本模块State的初始值

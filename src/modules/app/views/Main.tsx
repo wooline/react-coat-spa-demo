@@ -3,7 +3,7 @@ import NotFound from "components/NotFound";
 import VerifyRoute, { AuthState } from "components/ProtectedRoute";
 import RootState from "core/RootState";
 import React from "react";
-import { asyncComponent } from "react-coat-pkg";
+import { asyncComponent, LoadingState } from "react-coat-pkg";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { Dispatch } from "redux";
@@ -18,7 +18,7 @@ interface Props {
   projectConfigLoaded: boolean;
   curUserLoaded: boolean;
   curUser: User;
-  globalLoading: string;
+  globalLoading: LoadingState;
 }
 
 interface OwnProps {}
@@ -55,7 +55,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     globalLoading: app.loading.global,
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch<string>, ownProps: OwnProps) => {
+const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps) => {
   return {};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Component);
