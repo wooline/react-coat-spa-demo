@@ -6,11 +6,11 @@ export interface GetProductListResponse {
   list: string[];
 }
 
-export class AJAX {
+class AJAX {
   /// mock一个耗时3秒的异步请求
   @delayPromise(3)
   getProductList(): Promise<GetProductListResponse> {
-    return setLoading(Promise.resolve({ list: ["product1", "product2"] }));
+    return Promise.resolve({ list: ["product1", "product2"] });
   }
 }
 
