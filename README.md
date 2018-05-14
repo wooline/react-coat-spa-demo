@@ -46,7 +46,7 @@ src
 │             │     └── index.ts
 │             ├── model.ts
 │             ├── index.ts
-│             └── actionNames.ts
+│             └── exportActionNames.ts
 └── index.tsx  \\入口文件
 ```
 
@@ -56,7 +56,7 @@ src
 ### 如何添加一个新 Module
 
 1.  copy 一个业务模块目录并更名为新模块名，例如`src/modules/newModule`
-2.  在`src/modules/newModule/actionNames.ts`中更改 Namespace 和 ActionName
+2.  在`src/modules/newModule/exportActionNames.ts`中更改 Namespace 和 ActionName
 3.  在`src/modules/newModule/model.ts`中定义本模块的 State 和 Actions 等
 4.  在`src/modules/newModule/views`目录中创建 react 组件
 5.  在`src/core/RootState.ts`中导入新模块的 State 类型
@@ -69,4 +69,4 @@ src
 
 > 欢迎各位高人批评指正，觉得还不错的别忘了给个`Star` >\_<，如有错误或 Bug 请反馈或 Email：wooline@qq.com
 
-> 有问题也可以去：[知乎留言](https://zhuanlan.zhihu.com/p/34964264)
+> [讨论留言专用贴](https://github.com/wooline/react-coat-demo-simple/issues/1)

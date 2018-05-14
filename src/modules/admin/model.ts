@@ -1,11 +1,8 @@
 import RootState from "core/RootState";
-import {
-    BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel,
-} from "react-coat-pkg";
+import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat-pkg";
 import { call, put } from "redux-saga/effects";
-
-import * as actionNames from "./actionNames";
 import * as messageService from "./api/message";
+import * as actionNames from "./exportActionNames";
 import thisModule from "./index";
 
 // 定义本模块的State
@@ -21,7 +18,7 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions {
-  [actionNames.UPDATE_MESSAGE_LIST] = buildActionByReducer(function(messageList: string[], moduleState: State, rootState: RootState): State {
+  updateMessageList = buildActionByReducer(function(messageList: string[], moduleState: State, rootState: RootState): State {
     return { ...moduleState, messageList };
   });
 }
@@ -30,7 +27,7 @@ class ModuleHandlers {
   @buildLoading()
   [actionNames.INIT] = buildActionByEffect(function*({ pathname }: { pathname: string }, moduleState: State, rootState: RootState) {
     const messageList: messageService.GetMessageListResponse = yield call(messageService.api.getMessageList);
-    yield put(thisModule.actions.admin_updateMessageList(messageList.list));
+    yield put(thisModule.actions.updateMessageList(messageList.list));
   });
 }
 

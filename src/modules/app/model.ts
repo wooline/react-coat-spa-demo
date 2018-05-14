@@ -1,10 +1,9 @@
 import RootState from "core/RootState";
-import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel, ERROR_ACTION_NAME, LoadingState } from "react-coat-pkg";
+import { BaseModuleState, ERROR_ACTION_NAME, LoadingState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat-pkg";
 import { call, put } from "redux-saga/effects";
-
-import * as actionNames from "./actionNames";
 import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
+import * as actionNames from "./exportActionNames";
 import thisModule from "./index";
 
 // 定义本模块的State
@@ -41,16 +40,16 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions {
-  [actionNames.UPDATE_SETTINGS] = buildActionByReducer(function(settings: { title: string }, moduleState: State, rootState: RootState): State {
+  updateSettings = buildActionByReducer(function(settings: { title: string }, moduleState: State, rootState: RootState): State {
     return { ...moduleState, projectConfig: settings };
   });
-  [actionNames.UPDATE_CUR_USER] = buildActionByReducer(function(curUser: { uid: string; username: string; hasLogin: boolean }, moduleState: State, rootState: RootState): State {
+  updateCurUser = buildActionByReducer(function(curUser: { uid: string; username: string; hasLogin: boolean }, moduleState: State, rootState: RootState): State {
     return { ...moduleState, curUser };
   });
   @buildLoading(actionNames.NAMESPACE, "login") // 创建另一个局部loading状态来给“登录”按钮做反映
-  [actionNames.LOGIN] = buildActionByEffect(function*({ username, password }: { username: string; password: string }) {
+  login = buildActionByEffect(function*({ username, password }: { username: string; password: string }) {
     const curUser: sessionService.LoginResponse = yield call(sessionService.api.login, username, password);
-    yield put(thisModule.actions.app_updateCurUser(curUser));
+    yield put(thisModule.actions.updateCurUser(curUser));
   });
 }
 // 定义本模块的监听
@@ -64,9 +63,9 @@ class ModuleHandlers {
   @buildLoading()
   [actionNames.INIT] = buildActionByEffect(function*(data: State, moduleState: State, rootState: RootState) {
     const config: settingsService.GetSettingsResponse = yield call(settingsService.api.getSettings);
-    yield put(thisModule.actions.app_updateSettings(config));
+    yield put(thisModule.actions.updateSettings(config));
     const curUser: sessionService.GetCurUserResponse = yield call(sessionService.api.getCurUser);
-    yield put(thisModule.actions.app_updateCurUser(curUser));
+    yield put(thisModule.actions.updateCurUser(curUser));
   });
 }
 

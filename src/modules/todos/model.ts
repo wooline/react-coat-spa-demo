@@ -1,11 +1,7 @@
 import RootState from "core/RootState";
-import {
-    BaseModuleState, buildActionByEffect, buildActionByReducer, buildModel,
-    LOCATION_CHANGE_ACTION_NAME,
-} from "react-coat-pkg";
+import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildModel, LOCATION_CHANGE_ACTION_NAME } from "react-coat-pkg";
 import { call, put } from "redux-saga/effects";
 
-import * as actionNames from "./actionNames";
 import * as todoService from "./api/todos";
 import thisModule from "./index";
 
@@ -22,7 +18,7 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions {
-  [actionNames.UPDATE_TODOS_LIST] = buildActionByReducer(function(todosList: string[], moduleState: State, rootState: RootState): State {
+  updateTodosList = buildActionByReducer(function(todosList: string[], moduleState: State, rootState: RootState): State {
     return { ...moduleState, todosList };
   });
 }
@@ -35,7 +31,7 @@ class ModuleHandlers {
   [LOCATION_CHANGE_ACTION_NAME] = buildActionByEffect(function*({ pathname }: { pathname: string }, moduleState: State, rootState: RootState) {
     if (pathname === "/admin/todos") {
       const todos: todoService.GetTodosListResponse = yield call(todoService.api.getTodosList);
-      yield put(thisModule.actions.todos_updateTodosList(todos.list));
+      yield put(thisModule.actions.updateTodosList(todos.list));
     }
   });
 }

@@ -25,7 +25,7 @@ class Component extends React.PureComponent<Props, State> {
     function login(evt) {
       evt.stopPropagation();
       evt.preventDefault();
-      dispatch(thisModule.actions.app_login({ username: "", password: "" }) as any);
+      dispatch(thisModule.actions.login({ username: "", password: "" }) as any);
     }
     return hasLogined ? (
       <Redirect to={from} />

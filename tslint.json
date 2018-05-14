@@ -11,6 +11,7 @@
     "jsx-no-multiline-js": false,
     "arrow-parens": [true, "ban-single-arg-parens"],
     "no-var-requires": false,
-    "no-console": false
+    "no-console": false,
+    "ordered-imports": false
   }
 }

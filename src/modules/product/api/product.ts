@@ -1,6 +1,6 @@
 import { delayPromise, setLoading } from "react-coat-pkg";
 
-import { NAMESPACE } from "../actionNames";
+import { NAMESPACE } from "../exportActionNames";
 
 export interface GetProductListResponse {
   list: string[];
