@@ -1,6 +1,5 @@
 import RootState from "core/RootState";
-import { BaseModuleState, ERROR_ACTION_NAME, LoadingState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat-pkg";
-import { call, put } from "redux-saga/effects";
+import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, ERROR_ACTION_NAME, LoadingState, buildModel, effect } from "react-coat-pkg";
 import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
 import * as actionNames from "./exportActionNames";
@@ -39,34 +38,40 @@ const state: State = {
   },
 };
 // 定义本模块的Action
-class ModuleActions {
-  updateSettings = buildActionByReducer(function(settings: { title: string }, moduleState: State, rootState: RootState): State {
+class ModuleActions extends BaseModuleActions {
+  updateSettings(settings: { title: string }, moduleState: State, rootState: RootState): State {
     return { ...moduleState, projectConfig: settings };
-  });
-  updateCurUser = buildActionByReducer(function(curUser: { uid: string; username: string; hasLogin: boolean }, moduleState: State, rootState: RootState): State {
+  }
+  updateCurUser(curUser: { uid: string; username: string; hasLogin: boolean }, moduleState: State, rootState: RootState): State {
+    this.puta();
     return { ...moduleState, curUser };
-  });
-  @buildLoading(actionNames.NAMESPACE, "login") // 创建另一个局部loading状态来给“登录”按钮做反映
-  login = buildActionByEffect(function*({ username, password }: { username: string; password: string }) {
-    const curUser: sessionService.LoginResponse = yield call(sessionService.api.login, username, password);
-    yield put(thisModule.actions.updateCurUser(curUser));
-  });
+  }
+  @effect(actionNames.NAMESPACE, "login") // 创建另一个局部loading状态来给“登录”按钮做反映
+  *login({ username, password }: { username: string; password: string }): any {
+    // 注意，此处返回如果不为any会引起编译错误，有待ts修复
+    const curUser: sessionService.LoginResponse = yield this.call(sessionService.api.login, username, password);
+    yield this.put(thisModule.actions.updateCurUser(curUser));
+  }
+  protected puta() {
+    console.log(1);
+  }
 }
 // 定义本模块的监听
-class ModuleHandlers {
-  // 监听全局错误Action，收集并发送给后台
-  [ERROR_ACTION_NAME] = buildActionByEffect(function*(error, moduleState: State, rootState: RootState) {
+class ModuleHandlers extends BaseModuleHandlers {
+  // 监听全局错误Action，收集并发送给后台，为null表示不需要loading计数
+  @effect(null)
+  *[ERROR_ACTION_NAME](error, moduleState: State, rootState: RootState) {
     console.log(error);
-    yield call(settingsService.api.reportError, error);
-  });
+    yield this.call(settingsService.api.reportError, error);
+  }
   // 监听自已的INIT Action
-  @buildLoading()
-  [actionNames.INIT] = buildActionByEffect(function*(data: State, moduleState: State, rootState: RootState) {
-    const config: settingsService.GetSettingsResponse = yield call(settingsService.api.getSettings);
-    yield put(thisModule.actions.updateSettings(config));
-    const curUser: sessionService.GetCurUserResponse = yield call(sessionService.api.getCurUser);
-    yield put(thisModule.actions.updateCurUser(curUser));
-  });
+  @effect()
+  *[actionNames.INIT]() {
+    const config: settingsService.GetSettingsResponse = yield this.call(settingsService.api.getSettings);
+    yield this.put(thisModule.actions.updateSettings(config));
+    const curUser: sessionService.GetCurUserResponse = yield this.call(sessionService.api.getCurUser);
+    yield this.put(thisModule.actions.updateCurUser(curUser));
+  }
 }
 
 const model = buildModel(state, ModuleActions, ModuleHandlers);

@@ -1,10 +1,10 @@
 {
   "name": "react-coat-demo-simple",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "private": true,
   "dllDependencies": {
     "polyfill": ["babel-polyfill"],
-    "react": ["react", "react-dom", "redux", "react-redux", "history", "history/DOMUtils", "history/LocationUtils", "history/PathUtils", "react-router-redux", "react-router-dom", "redux-saga", "redux-saga/effects"]
+    "react": ["react", "react-dom", "redux", "react-redux", "history", "history/DOMUtils", "history/LocationUtils", "history/PathUtils", "react-router-redux", "react-router-dom", "redux-saga", "redux-saga/effects", "react-coat-pkg"]
   },
   "dependencies": {
     "autodll-webpack-plugin": "^0.3.9",
@@ -30,7 +30,7 @@
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
     "raf": "3.4.0",
-    "react-coat-pkg": "^1.2.3",
+    "react-coat-pkg": "^2.0.0",
     "react-dev-utils": "4.2.1",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",

@@ -1,6 +1,5 @@
 import RootState from "core/RootState";
-import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildModel, LOCATION_CHANGE_ACTION_NAME } from "react-coat-pkg";
-import { call, put } from "redux-saga/effects";
+import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, effect, buildModel, LOCATION_CHANGE_ACTION_NAME } from "react-coat-pkg";
 
 import * as todoService from "./api/todos";
 import thisModule from "./index";
@@ -17,23 +16,24 @@ const state: State = {
   },
 };
 // 定义本模块的Action
-class ModuleActions {
-  updateTodosList = buildActionByReducer(function(todosList: string[], moduleState: State, rootState: RootState): State {
+class ModuleActions extends BaseModuleActions {
+  updateTodosList(todosList: string[], moduleState: State, rootState: RootState): State {
     return { ...moduleState, todosList };
-  });
+  }
 }
 // 定义本模块的监听
-class ModuleHandlers {
+class ModuleHandlers extends BaseModuleHandlers {
   /*
   监听路由Action，因为存在 if 条件判断，所以此处不适合用@buildLoading()来对注入loading状态，
   改为在 productService.getProductList 方法中用setLoading()函数注入
   */
-  [LOCATION_CHANGE_ACTION_NAME] = buildActionByEffect(function*({ pathname }: { pathname: string }, moduleState: State, rootState: RootState) {
+  @effect(null)
+  *[LOCATION_CHANGE_ACTION_NAME]({ pathname }: { pathname: string }, moduleState: State, rootState: RootState) {
     if (pathname === "/admin/todos") {
-      const todos: todoService.GetTodosListResponse = yield call(todoService.api.getTodosList);
-      yield put(thisModule.actions.updateTodosList(todos.list));
+      const todos: todoService.GetTodosListResponse = yield this.call(todoService.api.getTodosList);
+      yield this.put(thisModule.actions.updateTodosList(todos.list));
     }
-  });
+  }
 }
 
 const model = buildModel(state, ModuleActions, ModuleHandlers);

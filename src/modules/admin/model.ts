@@ -1,6 +1,5 @@
 import RootState from "core/RootState";
-import { BaseModuleState, buildActionByEffect, buildActionByReducer, buildLoading, buildModel } from "react-coat-pkg";
-import { call, put } from "redux-saga/effects";
+import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, buildModel, effect } from "react-coat-pkg";
 import * as messageService from "./api/message";
 import * as actionNames from "./exportActionNames";
 import thisModule from "./index";
@@ -17,18 +16,18 @@ const state: State = {
   },
 };
 // 定义本模块的Action
-class ModuleActions {
-  updateMessageList = buildActionByReducer(function(messageList: string[], moduleState: State, rootState: RootState): State {
+class ModuleActions extends BaseModuleActions {
+  updateMessageList(messageList: string[], moduleState: State, rootState: RootState): State {
     return { ...moduleState, messageList };
-  });
+  }
 }
 // 定义本模块的监听
-class ModuleHandlers {
-  @buildLoading()
-  [actionNames.INIT] = buildActionByEffect(function*({ pathname }: { pathname: string }, moduleState: State, rootState: RootState) {
-    const messageList: messageService.GetMessageListResponse = yield call(messageService.api.getMessageList);
-    yield put(thisModule.actions.updateMessageList(messageList.list));
-  });
+class ModuleHandlers extends BaseModuleHandlers {
+  @effect()
+  *[actionNames.INIT]() {
+    const messageList: messageService.GetMessageListResponse = yield this.call(messageService.api.getMessageList);
+    yield this.put(thisModule.actions.updateMessageList(messageList.list));
+  }
 }
 
 const model = buildModel(state, ModuleActions, ModuleHandlers);

@@ -9,12 +9,14 @@
 * 业务模块化，可独立打包和按需加载
 * 使用 typescript，所有 state 和 action 都可以做类型推断
 
-### 升级 react-coat-pkg 至 1.2 版本
+### 简单四步：buildModel(), buildViews(), buildModule(), createApp()
+
+### 升级 react-coat-pkg 至 2.0.0 版本
 
 ### 关于本 Demo
 
 * 本 Demo 作为 react-coat 框架的 Hello world 示例，可直接看源码和注释，简单易懂
-* 本 Demo 直接使用 `create-react-app` v1.5.2 命令创建，更改了少量 webpack 配置，并保留了其原始文件，方便用户对比和升级
+* 本 Demo 基于 `create-react-app` v1.5.2 命令创建，更改了少量 webpack 配置，并保留了其原始文件，方便用户对比和升级
 * 本 Demo 使用 typescript 开发，但你也可以使用 ES6 原生 JS
 
 ### 运行本 Demo
