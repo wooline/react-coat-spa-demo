@@ -38,7 +38,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     todosList: data.todosList,
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch<string>, ownProps: OwnProps) => {
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   return {};
 };
 

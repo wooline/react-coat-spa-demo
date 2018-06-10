@@ -8,7 +8,7 @@ import { Dispatch } from "redux";
 import "./Login.less";
 
 interface Props {
-  dispatch: Dispatch<any>;
+  dispatch: Dispatch;
   hasLogined: boolean;
   logining: boolean;
   location: { state };
@@ -56,7 +56,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     logining: Boolean(loginLoading && loginLoading !== "Stop"),
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch<string>, ownProps: OwnProps) => {
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   return {
     dispatch,
   };

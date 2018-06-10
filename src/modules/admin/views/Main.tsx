@@ -37,7 +37,7 @@ class Component extends React.PureComponent<Props, State> {
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   return { pathname: state.router.location.pathname };
 };
-const mapDispatchToProps = (dispatch: Dispatch<string>, ownProps: OwnProps) => {
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   return {};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Component);
