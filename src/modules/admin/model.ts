@@ -1,4 +1,3 @@
-import RootState from "core/RootState";
 import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, buildModel, effect } from "react-coat-pkg";
 import * as messageService from "./api/message";
 import * as actionNames from "./exportActionNames";
@@ -17,8 +16,8 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions {
-  updateMessageList(messageList: string[], moduleState: State, rootState: RootState): State {
-    return { ...moduleState, messageList };
+  updateMessageList({ payload, moduleState }: { payload: string[]; moduleState: State }): State {
+    return { ...moduleState, messageList: payload };
   }
 }
 // 定义本模块的监听

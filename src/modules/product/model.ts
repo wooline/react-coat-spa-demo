@@ -1,4 +1,3 @@
-import RootState from "core/RootState";
 import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, LOCATION_CHANGE_ACTION_NAME, buildModel, effect } from "react-coat-pkg";
 import * as productService from "./api/product";
 import thisModule from "./index";
@@ -16,8 +15,8 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions {
-  updateProductList(productList: string[], moduleState: State, rootState: RootState): State {
-    return { ...moduleState, productList };
+  updateProductList({ payload, moduleState }: { payload: string[]; moduleState: State }): State {
+    return { ...moduleState, productList: payload };
   }
 }
 // 定义本模块的监听
@@ -27,8 +26,8 @@ class ModuleHandlers extends BaseModuleHandlers {
   改为在 productService.getProductList 方法中用setLoading()函数注入
   */
   @effect(null)
-  *[LOCATION_CHANGE_ACTION_NAME]({ location: { pathname } }: { location: { pathname: string } }, moduleState: State, rootState: RootState) {
-    if (pathname === "/admin/product") {
+  *[LOCATION_CHANGE_ACTION_NAME]({ payload }: { payload: { location: { pathname: string } } }) {
+    if (payload.location.pathname === "/admin/product") {
       const todos: productService.GetProductListResponse = yield this.call(productService.api.getProductList);
       yield this.put(thisModule.actions.updateProductList(todos.list));
     }
