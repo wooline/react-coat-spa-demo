@@ -1,4 +1,4 @@
-import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, ERROR_ACTION_NAME, LoadingState, buildModel, effect } from "react-coat-pkg";
+import { ActionData, BaseModuleActions, BaseModuleHandlers, BaseModuleState, ERROR_ACTION_NAME, LoadingState, buildModel, effect } from "react-coat-pkg";
 import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
 import * as actionNames from "./exportActionNames";
@@ -38,15 +38,15 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions {
-  updateSettings({ payload, moduleState }: { payload: { title: string }; moduleState: State }): State {
+  updateSettings({ payload, moduleState }: ActionData<{ title: string }, State>): State {
     return { ...moduleState, projectConfig: payload };
   }
-  updateCurUser({ payload, moduleState }: { payload: { uid: string; username: string; hasLogin: boolean }; moduleState: State }): State {
+  updateCurUser({ payload, moduleState }: ActionData<{ uid: string; username: string; hasLogin: boolean }, State>): State {
     this.test();
     return { ...moduleState, curUser: payload };
   }
   @effect(actionNames.NAMESPACE, "login") // 创建另一个局部loading状态来给“登录”按钮做反映
-  *login({ payload }: { payload: { username: string; password: string } }): any {
+  *login({ payload }: ActionData<{ username: string; password: string }>): any {
     // 注意，此处返回如果不为any会引起编译错误，有待ts修复
     const curUser: sessionService.LoginResponse = yield this.call(sessionService.api.login, payload.username, payload.password);
     yield this.put(thisModule.actions.updateCurUser(curUser));
@@ -59,7 +59,7 @@ class ModuleActions extends BaseModuleActions {
 class ModuleHandlers extends BaseModuleHandlers {
   // 监听全局错误Action，收集并发送给后台，为null表示不需要loading计数
   @effect(null)
-  *[ERROR_ACTION_NAME]({ payload }) {
+  *[ERROR_ACTION_NAME]({ payload }: ActionData<Error>) {
     console.log(payload);
     yield this.call(settingsService.api.reportError, payload);
   }
@@ -73,7 +73,7 @@ class ModuleHandlers extends BaseModuleHandlers {
   }
 }
 
-const model = buildModel(state, ModuleActions, ModuleHandlers);
+const model = buildModel(state, new ModuleActions(), new ModuleHandlers());
 
 export default model;
 

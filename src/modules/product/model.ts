@@ -1,4 +1,4 @@
-import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, LOCATION_CHANGE_ACTION_NAME, buildModel, effect } from "react-coat-pkg";
+import { ActionData, BaseModuleActions, BaseModuleHandlers, BaseModuleState, LOCATION_CHANGE_ACTION_NAME, buildModel, effect } from "react-coat-pkg";
 import * as productService from "./api/product";
 import thisModule from "./index";
 
@@ -15,7 +15,7 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions {
-  updateProductList({ payload, moduleState }: { payload: string[]; moduleState: State }): State {
+  updateProductList({ payload, moduleState }: ActionData<string[], State>): State {
     return { ...moduleState, productList: payload };
   }
 }
@@ -26,7 +26,7 @@ class ModuleHandlers extends BaseModuleHandlers {
   改为在 productService.getProductList 方法中用setLoading()函数注入
   */
   @effect(null)
-  *[LOCATION_CHANGE_ACTION_NAME]({ payload }: { payload: { location: { pathname: string } } }) {
+  *[LOCATION_CHANGE_ACTION_NAME]({ payload }: ActionData<{ location: { pathname: string } }>) {
     if (payload.location.pathname === "/admin/product") {
       const todos: productService.GetProductListResponse = yield this.call(productService.api.getProductList);
       yield this.put(thisModule.actions.updateProductList(todos.list));
@@ -34,7 +34,7 @@ class ModuleHandlers extends BaseModuleHandlers {
   }
 }
 
-const model = buildModel(state, ModuleActions, ModuleHandlers);
+const model = buildModel(state, new ModuleActions(), new ModuleHandlers());
 
 export default model;
 

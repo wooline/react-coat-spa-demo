@@ -1,4 +1,4 @@
-import { BaseModuleActions, BaseModuleHandlers, BaseModuleState, buildModel, effect } from "react-coat-pkg";
+import { ActionData, BaseModuleActions, BaseModuleHandlers, BaseModuleState, buildModel, effect } from "react-coat-pkg";
 import * as messageService from "./api/message";
 import * as actionNames from "./exportActionNames";
 import thisModule from "./index";
@@ -16,7 +16,7 @@ const state: State = {
 };
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions {
-  updateMessageList({ payload, moduleState }: { payload: string[]; moduleState: State }): State {
+  updateMessageList({ payload, moduleState }: ActionData<string[], State>): State {
     return { ...moduleState, messageList: payload };
   }
 }
@@ -29,7 +29,7 @@ class ModuleHandlers extends BaseModuleHandlers {
   }
 }
 
-const model = buildModel(state, ModuleActions, ModuleHandlers);
+const model = buildModel(state, new ModuleActions(), new ModuleHandlers());
 
 export default model;
 
