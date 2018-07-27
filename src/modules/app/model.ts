@@ -1,11 +1,12 @@
-import { ActionData, BaseModuleActions, BaseModuleHandlers, BaseModuleState, ERROR_ACTION_NAME, LoadingState, buildModel, effect } from "react-coat-pkg";
+import RootState from "core/RootState";
+import { BaseModuleActions, LoadingState, ModuleState, effect, exportModel, loading, reducer } from "react-coat-pkg";
+import { SagaIterator } from "redux-saga";
 import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
 import * as actionNames from "./exportActionNames";
-import thisModule from "./index";
 
 // 定义本模块的State
-interface State extends BaseModuleState {
+interface State extends ModuleState {
   projectConfig: {
     title: string;
   };
@@ -37,43 +38,43 @@ const state: State = {
   },
 };
 // 定义本模块的Action
-class ModuleActions extends BaseModuleActions {
-  updateSettings({ payload, moduleState }: ActionData<{ title: string }, State>): State {
-    return { ...moduleState, projectConfig: payload };
+class ModuleActions extends BaseModuleActions<State, RootState> {
+  @reducer
+  updateSettings(projectConfig: { title: string }): State {
+    return { ...this.state, projectConfig };
   }
-  updateCurUser({ payload, moduleState }: ActionData<{ uid: string; username: string; hasLogin: boolean }, State>): State {
+  @reducer
+  updateCurUser(curUser: { uid: string; username: string; hasLogin: boolean }): State {
     this.test();
-    return { ...moduleState, curUser: payload };
+    return { ...this.state, curUser };
   }
-  @effect(actionNames.NAMESPACE, "login") // 创建另一个局部loading状态来给“登录”按钮做反映
-  *login({ payload }: ActionData<{ username: string; password: string }>): any {
+  @loading(actionNames.NAMESPACE, "login") // 创建另一个局部loading状态来给“登录”按钮做反映
+  @effect
+  *login(payload: { username: string; password: string }): SagaIterator {
     // 注意，此处返回如果不为any会引起编译错误，有待ts修复
     const curUser: sessionService.LoginResponse = yield this.call(sessionService.api.login, payload.username, payload.password);
-    yield this.put(thisModule.actions.updateCurUser(curUser));
+    yield this.put(this.updateCurUser(curUser));
   }
+  @loading()
+  @effect
+  *INIT(): SagaIterator {
+    const config: settingsService.GetSettingsResponse = yield this.call(settingsService.api.getSettings);
+    yield this.put(this.updateSettings(config));
+    const curUser: sessionService.GetCurUserResponse = yield this.call(sessionService.api.getCurUser);
+    yield this.put(this.updateCurUser(curUser));
+  }
+  @effect
+  protected *["@@framework/ERROR"](payload: Error): SagaIterator {
+    console.log(payload);
+    yield this.call(settingsService.api.reportError, payload);
+  }
+
   protected test() {
     console.log(1);
   }
 }
-// 定义本模块的监听
-class ModuleHandlers extends BaseModuleHandlers {
-  // 监听全局错误Action，收集并发送给后台，为null表示不需要loading计数
-  @effect(null)
-  *[ERROR_ACTION_NAME]({ payload }: ActionData<Error>) {
-    console.log(payload);
-    yield this.call(settingsService.api.reportError, payload);
-  }
-  // 监听自已的INIT Action
-  @effect()
-  *[actionNames.INIT]() {
-    const config: settingsService.GetSettingsResponse = yield this.call(settingsService.api.getSettings);
-    yield this.put(thisModule.actions.updateSettings(config));
-    const curUser: sessionService.GetCurUserResponse = yield this.call(sessionService.api.getCurUser);
-    yield this.put(thisModule.actions.updateCurUser(curUser));
-  }
-}
 
-const model = buildModel(state, new ModuleActions(), new ModuleHandlers());
+const model = exportModel(actionNames.NAMESPACE, state, new ModuleActions());
 
 export default model;
 

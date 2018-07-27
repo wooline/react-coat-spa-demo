@@ -1,14 +1,14 @@
 import RootState from "core/RootState";
 import React from "react";
-import { asyncComponent } from "react-coat-pkg";
+import { async } from "react-coat-pkg";
 import { connect } from "react-redux";
 import { match, Route } from "react-router-dom";
 import { Dispatch } from "redux";
 
 import GlobalHeader from "./GlobalHeader";
 
-const Product = asyncComponent(() => import(/* webpackChunkName: "product" */ "modules/product/views"));
-const Todos = asyncComponent(() => import(/* webpackChunkName: "todos" */ "modules/todos/views"));
+const Product = async(() => import(/* webpackChunkName: "product" */ "modules/product/views"));
+const Todos = async(() => import(/* webpackChunkName: "todos" */ "modules/todos/views"));
 
 interface Props {
   match: match<any>;
@@ -40,4 +40,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
   return {};
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Component);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Component);

@@ -1,4 +1,4 @@
-import { buildModule } from "react-coat-pkg";
+import { exportModule } from "react-coat-pkg";
 
 import { NAMESPACE } from "./exportActionNames";
 import { Actions, State as ModuleState } from "./model";
@@ -8,5 +8,5 @@ export interface State {
   [NAMESPACE]: ModuleState;
 }
 
-// 导出Actions
-export default buildModule<Actions>(NAMESPACE);
+// 导出Actions和namespace
+export default exportModule<Actions>(NAMESPACE);

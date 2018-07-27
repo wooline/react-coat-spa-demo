@@ -18,8 +18,7 @@
       "react-router-redux",
       "react-router-dom",
       "redux-saga",
-      "redux-saga/effects",
-      "react-coat-pkg"
+      "redux-saga/effects"
     ]
   },
   "dependencies": {

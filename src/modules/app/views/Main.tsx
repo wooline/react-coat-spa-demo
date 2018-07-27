@@ -3,14 +3,14 @@ import NotFound from "components/NotFound";
 import VerifyRoute, { AuthState } from "components/ProtectedRoute";
 import RootState from "core/RootState";
 import React from "react";
-import { asyncComponent, LoadingState } from "react-coat-pkg";
+import { async, LoadingState } from "react-coat-pkg";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { Dispatch } from "redux";
 
 import Login from "./Login";
 
-const Admin = asyncComponent(() => import(/* webpackChunkName: "admin" */ "modules/admin/views"));
+const Admin = async(() => import(/* webpackChunkName: "admin" */ "modules/admin/views"));
 
 type User = RootState["project"]["app"]["curUser"];
 
@@ -58,4 +58,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps) => {
   return {};
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Component);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Component);

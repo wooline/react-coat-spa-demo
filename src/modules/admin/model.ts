@@ -1,10 +1,11 @@
-import { ActionData, BaseModuleActions, BaseModuleHandlers, BaseModuleState, buildModel, effect } from "react-coat-pkg";
+import RootState from "core/RootState";
+import { BaseModuleActions, ModuleState, effect, exportModel, loading, reducer } from "react-coat-pkg";
+import { SagaIterator } from "redux-saga";
 import * as messageService from "./api/message";
 import * as actionNames from "./exportActionNames";
-import thisModule from "./index";
 
 // 定义本模块的State
-interface State extends BaseModuleState {
+interface State extends ModuleState {
   messageList: string[];
 }
 // 定义本模块State的初始值
@@ -15,21 +16,21 @@ const state: State = {
   },
 };
 // 定义本模块的Action
-class ModuleActions extends BaseModuleActions {
-  updateMessageList({ payload, moduleState }: ActionData<string[], State>): State {
-    return { ...moduleState, messageList: payload };
+class ModuleActions extends BaseModuleActions<State, RootState> {
+  @reducer
+  updateMessageList(messageList: string[]): State {
+    return { ...this.state, messageList };
   }
-}
-// 定义本模块的监听
-class ModuleHandlers extends BaseModuleHandlers {
-  @effect()
-  *[actionNames.INIT]() {
+  @loading()
+  @effect
+  *INIT(): SagaIterator {
+    yield this.put(this.SET_INIT_DATA());
     const messageList: messageService.GetMessageListResponse = yield this.call(messageService.api.getMessageList);
-    yield this.put(thisModule.actions.updateMessageList(messageList.list));
+    yield this.put(this.updateMessageList(messageList.list));
   }
 }
 
-const model = buildModel(state, new ModuleActions(), new ModuleHandlers());
+const model = exportModel(actionNames.NAMESPACE, state, new ModuleActions());
 
 export default model;
 
