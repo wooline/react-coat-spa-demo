@@ -1,8 +1,8 @@
 import RootState from "core/RootState";
-import { BaseModuleActions, ModuleState, reducer, effect, exportModel } from "react-coat-pkg";
+import { BaseModuleActions, effect, exportModel, LOCATION_CHANGE, ModuleState, reducer } from "react-coat-pkg";
 import { SagaIterator } from "redux-saga";
 import * as todoService from "./api/todos";
-import * as actionNames from "./exportActionNames";
+import * as actionNames from "./exportNames";
 // 定义本模块的State
 interface State extends ModuleState {
   todosList: string[];
@@ -10,9 +10,7 @@ interface State extends ModuleState {
 // 定义本模块State的初始值
 const state: State = {
   todosList: [],
-  loading: {
-    global: "Stop",
-  },
+  loading: {},
 };
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions<State, RootState> {
@@ -20,11 +18,13 @@ class ModuleActions extends BaseModuleActions<State, RootState> {
   updateTodosList(payload: string[]): State {
     return { ...this.state, todosList: payload };
   }
+  // 兼听路由变化的Action
   @effect
-  protected *["@@router/LOCATION_CHANGE"](payload: { location: { pathname: string } }): SagaIterator {
-    // 定义本模块的监听
+  protected *[LOCATION_CHANGE as string](payload: { location: { pathname: string } }): SagaIterator {
     if (payload.location.pathname === "/admin/todos") {
-      const todos: todoService.GetTodosListResponse = yield this.call(todoService.api.getTodosList);
+      const getTodosList = this.callPromise(todoService.api.getTodosList);
+      yield getTodosList;
+      const todos = getTodosList.getResponse();
       yield this.put(this.updateTodosList(todos.list));
     }
   }

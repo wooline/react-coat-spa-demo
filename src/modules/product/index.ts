@@ -1,6 +1,6 @@
 import { exportModule } from "react-coat-pkg";
 
-import { NAMESPACE } from "./exportActionNames";
+import { NAMESPACE } from "./exportNames";
 import { Actions, State as ModuleState } from "./model";
 
 // 导出State数据格式

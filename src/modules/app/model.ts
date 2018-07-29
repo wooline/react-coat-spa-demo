@@ -1,9 +1,9 @@
 import RootState from "core/RootState";
-import { BaseModuleActions, LoadingState, ModuleState, effect, exportModel, loading, reducer } from "react-coat-pkg";
+import { BaseModuleActions, LoadingState, ModuleState, effect, exportModel, loading, globalLoading, reducer, ERROR } from "react-coat-pkg";
 import { SagaIterator } from "redux-saga";
 import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
-import * as actionNames from "./exportActionNames";
+import * as actionNames from "./exportNames";
 
 // 定义本模块的State
 interface State extends ModuleState {
@@ -40,37 +40,34 @@ const state: State = {
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions<State, RootState> {
   @reducer
-  updateSettings(projectConfig: { title: string }): State {
-    return { ...this.state, projectConfig };
-  }
-  @reducer
-  updateCurUser(curUser: { uid: string; username: string; hasLogin: boolean }): State {
-    this.test();
+  setCurUser(curUser: { uid: string; username: string; hasLogin: boolean }): State {
     return { ...this.state, curUser };
   }
-  @loading(actionNames.NAMESPACE, "login") // 创建另一个局部loading状态来给“登录”按钮做反映
+  @loading("login") // 创建另一个局部loading状态来给“登录”按钮做反映
   @effect
   *login(payload: { username: string; password: string }): SagaIterator {
-    // 注意，此处返回如果不为any会引起编译错误，有待ts修复
-    const curUser: sessionService.LoginResponse = yield this.call(sessionService.api.login, payload.username, payload.password);
-    yield this.put(this.updateCurUser(curUser));
+    const login = this.callPromise(sessionService.api.login, payload.username, payload.password);
+    yield login;
+    const curUser = login.getResponse();
+    yield this.put(this.setCurUser(curUser));
   }
-  @loading()
+  // 自定义启动项，覆盖基类默认的START方法
+  @globalLoading // 使用全局loading状态
   @effect
-  *INIT(): SagaIterator {
-    const config: settingsService.GetSettingsResponse = yield this.call(settingsService.api.getSettings);
-    yield this.put(this.updateSettings(config));
-    const curUser: sessionService.GetCurUserResponse = yield this.call(sessionService.api.getCurUser);
-    yield this.put(this.updateCurUser(curUser));
+  *START(): SagaIterator {
+    const getSettings = this.callPromise(settingsService.api.getSettings);
+    yield getSettings;
+    const projectConfig = getSettings.getResponse();
+    const getCurUser = this.callPromise(sessionService.api.getCurUser);
+    yield getCurUser;
+    const curUser = getCurUser.getResponse();
+    yield this.put(this.STARTED({ ...this.state, projectConfig, curUser }));
   }
+  // 兼听全局错误的Action，并发送给后台
   @effect
-  protected *["@@framework/ERROR"](payload: Error): SagaIterator {
+  protected *[ERROR as string](payload: Error): SagaIterator {
     console.log(payload);
-    yield this.call(settingsService.api.reportError, payload);
-  }
-
-  protected test() {
-    console.log(1);
+    yield this.callPromise(settingsService.api.reportError, payload);
   }
 }
 
