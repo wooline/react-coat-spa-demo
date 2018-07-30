@@ -8,15 +8,15 @@ interface State extends ModuleState {
   todosList: string[];
 }
 // 定义本模块State的初始值
-const state: State = {
+const initState: State = {
   todosList: [],
   loading: {},
 };
 // 定义本模块的Action
 class ModuleActions extends BaseModuleActions<State, RootState> {
   @reducer
-  updateTodosList(payload: string[]): State {
-    return { ...this.state, todosList: payload };
+  updateTodosList(todosList: string[]): State {
+    return { ...this.state, todosList };
   }
   // 兼听路由变化的Action
   @effect
@@ -30,7 +30,7 @@ class ModuleActions extends BaseModuleActions<State, RootState> {
   }
 }
 
-const model = exportModel(actionNames.NAMESPACE, state, new ModuleActions());
+const model = exportModel(actionNames.NAMESPACE, initState, new ModuleActions());
 
 export default model;
 

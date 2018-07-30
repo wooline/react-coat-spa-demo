@@ -9,7 +9,7 @@ interface State extends ModuleState {
   messageList: string[];
 }
 // 定义本模块State的初始值
-const state: State = {
+const initState: State = {
   messageList: [],
   loading: {},
 };
@@ -27,7 +27,7 @@ class ModuleActions extends BaseModuleActions<State, RootState> {
   }
 }
 
-const model = exportModel(actionNames.NAMESPACE, state, new ModuleActions());
+const model = exportModel(actionNames.NAMESPACE, initState, new ModuleActions());
 
 export default model;
 
