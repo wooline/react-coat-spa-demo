@@ -2,7 +2,6 @@ import RootState from "core/RootState";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Dispatch } from "redux";
 
 type User = RootState["project"]["app"]["curUser"];
 
@@ -11,11 +10,7 @@ interface Props {
   messageList: string[];
 }
 
-interface OwnProps {}
-
-interface State {}
-
-class Component extends PureComponent<Props, State> {
+class Component extends PureComponent<Props> {
   render() {
     const { curUser, messageList } = this.props;
     return (
@@ -36,13 +31,11 @@ class Component extends PureComponent<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
+const mapStateToProps = (state: RootState) => {
   return {
     curUser: state.project.app.curUser,
     messageList: state.project.admin.messageList,
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps) => {
-  return {};
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Component);
+
+export default connect(mapStateToProps)(Component);

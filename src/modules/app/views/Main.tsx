@@ -6,7 +6,6 @@ import React from "react";
 import { async, LoadingState } from "react-coat-pkg";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { Dispatch } from "redux";
 
 import Login from "./Login";
 
@@ -21,14 +20,11 @@ interface Props {
   globalLoading: LoadingState;
 }
 
-interface OwnProps {}
-interface State {}
-
 function hasAuth(path: string, curUser: User): AuthState {
   return curUser.hasLogin ? AuthState.Authorized : AuthState.Forbidden;
 }
 
-class Component extends React.PureComponent<Props, State> {
+class Component extends React.PureComponent<Props> {
   public render() {
     const { projectConfigLoaded, curUserLoaded, curUser, globalLoading } = this.props;
     return (
@@ -46,7 +42,7 @@ class Component extends React.PureComponent<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
+const mapStateToProps = (state: RootState) => {
   const app = state.project.app;
   return {
     projectConfigLoaded: app.projectConfig.title !== "",
@@ -55,10 +51,5 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     globalLoading: app.loading.global,
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch<any>, ownProps: OwnProps) => {
-  return {};
-};
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Component);
+
+export default connect(mapStateToProps)(Component);

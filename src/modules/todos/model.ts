@@ -1,39 +1,39 @@
 import RootState from "core/RootState";
-import { BaseModuleActions, effect, exportModel, LOCATION_CHANGE, ModuleState, reducer } from "react-coat-pkg";
-import { SagaIterator } from "redux-saga";
+import { Actions, BaseModuleHandlers, BaseModuleState, LOCATION_CHANGE, SagaIterator, effect, exportModel, reducer } from "react-coat-pkg";
 import * as todoService from "./api/todos";
 import * as actionNames from "./exportNames";
+
 // 定义本模块的State
-interface State extends ModuleState {
+export interface ModuleState extends BaseModuleState {
   todosList: string[];
 }
+
 // 定义本模块State的初始值
-const initState: State = {
+const initState: ModuleState = {
   todosList: [],
   loading: {},
 };
-// 定义本模块的Action
-class ModuleActions extends BaseModuleActions<State, RootState> {
+
+// 导出本模块的Actions
+export type ModuleActions = Actions<ModuleHandlers>;
+
+// 定义本模块的Handlers
+class ModuleHandlers extends BaseModuleHandlers<ModuleState, RootState, ModuleActions> {
   @reducer
-  updateTodosList(todosList: string[]): State {
+  updateTodosList(todosList: string[]): ModuleState {
     return { ...this.state, todosList };
   }
   // 兼听路由变化的Action
+  // 兼听外部模块的Action，不需要手动触发，所以请使用protected或private
   @effect
   protected *[LOCATION_CHANGE as string](payload: { location: { pathname: string } }): SagaIterator {
     if (payload.location.pathname === "/admin/todos") {
       const getTodosList = this.callPromise(todoService.api.getTodosList);
       yield getTodosList;
       const todos = getTodosList.getResponse();
-      yield this.put(this.updateTodosList(todos.list));
+      yield this.put(this.actions.updateTodosList(todos.list));
     }
   }
 }
 
-const model = exportModel(actionNames.NAMESPACE, initState, new ModuleActions());
-
-export default model;
-
-type Actions = typeof model.actions;
-
-export { Actions, State };
+export default exportModel(actionNames.NAMESPACE, initState, new ModuleHandlers());

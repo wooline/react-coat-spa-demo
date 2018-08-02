@@ -1,19 +1,16 @@
 import RootState from "core/RootState";
 import thisModule from "modules/app";
 import * as React from "react";
-import { connect } from "react-redux";
+import { connect, DispatchProp } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { Dispatch } from "redux";
 
 import "./Login.less";
 
-interface Props {
-  dispatch: Dispatch;
+interface Props extends DispatchProp {
   hasLogined: boolean;
   logining: boolean;
   location: { state };
 }
-interface OwnProps {}
 interface State {
   redirectToReferrer: boolean;
 }
@@ -48,7 +45,7 @@ class Component extends React.PureComponent<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
+const mapStateToProps = (state: RootState) => {
   const curUser = state.project.app.curUser;
   const loginLoading = state.project.app.loading.login;
   return {
@@ -56,9 +53,5 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     logining: Boolean(loginLoading && loginLoading !== "Stop"),
   };
 };
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => {
-  return {
-    dispatch,
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Component);
+
+export default connect(mapStateToProps)(Component);

@@ -2,16 +2,9 @@
 
 > 请先了解：[react-coat](https://github.com/wooline/react-coat)
 
-- 集成"history", "react-router-redux", "react-router-dom", "redux-saga"
-- 精简而自然的 API 语法，几乎不用学习即可上手
-- 微框架，源码不到 500 行，编译成 ES5 并压缩后仅 11k 左右
-- 无强侵入性，仅为 redux 的糖衣外套，不改变其本身逻辑
-- 业务模块化，可独立打包和按需加载
-- 使用 typescript，所有 state 和 action 都可以做类型推断
+### 总结为简单四步：exportModel(), exportViews(), exportModule(), createApp()
 
-### 简单四步：buildModel(), buildViews(), buildModule(), createApp()
-
-### 升级 react-coat-pkg 至 2.3.0 版本
+### 升级 react-coat-pkg 至 3.0.0 版本
 
 ### 关于本 Demo
 
@@ -48,7 +41,7 @@ src
 │             │     └── index.ts
 │             ├── model.ts
 │             ├── index.ts
-│             └── exportActionNames.ts
+│             └── exportNames.ts
 └── index.tsx  \\入口文件
 ```
 
@@ -58,7 +51,7 @@ src
 ### 如何添加一个新 Module
 
 1.  copy 一个业务模块目录并更名为新模块名，例如`src/modules/newModule`
-2.  在`src/modules/newModule/exportActionNames.ts`中更改 Namespace 和 ActionName
+2.  在`src/modules/newModule/exportNames.ts`中更改 Namespace
 3.  在`src/modules/newModule/model.ts`中定义本模块的 State 和 Actions 等
 4.  在`src/modules/newModule/views`目录中创建 react 组件
 5.  在`src/core/RootState.ts`中导入新模块的 State 类型

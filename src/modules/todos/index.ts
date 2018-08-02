@@ -1,7 +1,6 @@
 import { exportModule } from "react-coat-pkg";
-
 import { NAMESPACE } from "./exportNames";
-import { Actions, State as ModuleState } from "./model";
+import { ModuleActions, ModuleState } from "./model";
 
 // 导出本模块的State类型
 export interface State {
@@ -9,4 +8,4 @@ export interface State {
 }
 
 // 导出Actions
-export default exportModule<Actions>(NAMESPACE);
+export default exportModule<ModuleActions>(NAMESPACE);
