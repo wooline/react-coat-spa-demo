@@ -6117,9 +6117,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-coat-pkg@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/react-coat-pkg/-/react-coat-pkg-3.0.0.tgz#23e1251ba9cab041e8d055bfd7d1ae72bdd62b88"
+react-coat-pkg@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/react-coat-pkg/-/react-coat-pkg-3.1.0.tgz#7e97b4d84ddb952678013fff9cb35b0c2625fe61"
   dependencies:
     "@types/history" "4.6.2"
     "@types/react" "16.3.17"
