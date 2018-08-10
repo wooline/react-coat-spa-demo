@@ -1,26 +1,26 @@
 import RootState from "core/RootState";
-import { Actions, BaseModuleHandlers, BaseModuleState, LOCATION_CHANGE, SagaIterator, effect, exportModel, reducer } from "react-coat-pkg";
+import { Actions, BaseModuleHandlers, BaseModuleState, LoadingState, LOCATION_CHANGE, SagaIterator, effect, exportModel, reducer } from "react-coat-pkg";
 import * as todoService from "./api/todos";
 import * as actionNames from "./exportNames";
 
 // 定义本模块的State
 export interface ModuleState extends BaseModuleState {
   todosList: string[];
+  loading: {
+    global: LoadingState;
+  };
 }
 
 // 定义本模块State的初始值
 const initState: ModuleState = {
   todosList: [],
-  loading: {},
+  loading: { global: LoadingState.Stop },
 };
 
-// 导出本模块的Actions
-export type ModuleActions = Actions<ModuleHandlers>;
-
 // 定义本模块的Handlers
-class ModuleHandlers extends BaseModuleHandlers<ModuleState, RootState, ModuleActions> {
+class ModuleHandlers extends BaseModuleHandlers<ModuleState, RootState> {
   @reducer
-  updateTodosList(todosList: string[]): ModuleState {
+  protected updateTodosList(todosList: string[]): ModuleState {
     return { ...this.state, todosList };
   }
   // 兼听路由变化的Action
@@ -31,9 +31,12 @@ class ModuleHandlers extends BaseModuleHandlers<ModuleState, RootState, ModuleAc
       const getTodosList = this.callPromise(todoService.api.getTodosList);
       yield getTodosList;
       const todos = getTodosList.getResponse();
-      yield this.put(this.actions.updateTodosList(todos.list));
+      yield this.put(this.callThisAction(this.updateTodosList, todos.list));
     }
   }
 }
+
+// 导出本模块的Actions
+export type ModuleActions = Actions<ModuleHandlers>;
 
 export default exportModel(actionNames.NAMESPACE, initState, new ModuleHandlers());

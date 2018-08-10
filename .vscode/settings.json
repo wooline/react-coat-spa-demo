@@ -3,7 +3,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "prettier.stylelintIntegration": true,
   "editor.formatOnSave": true,
-  "importSorter.generalConfiguration.sortOnBeforeSave": true,
-  "importSorter.importStringConfiguration.quoteMark": "double",
-  "importSorter.importStringConfiguration.trailingComma": "multiLine"
+  "stylelint.configOverrides": {
+    "ignoreFiles": "**/*.tsx"
+  }
 }
