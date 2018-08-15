@@ -15,7 +15,7 @@
       "history/DOMUtils",
       "history/LocationUtils",
       "history/PathUtils",
-      "react-router-redux",
+      "connected-react-router",
       "react-router-dom",
       "redux-saga",
       "redux-saga/effects",
