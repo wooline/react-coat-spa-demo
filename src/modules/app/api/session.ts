@@ -1,26 +1,12 @@
-import { delayPromise } from "react-coat-pkg";
-
-export interface GetCurUserResponse {
-  uid: string;
-  username: string;
-  hasLogin: boolean;
-}
-export interface LoginResponse {
-  uid: string;
-  username: string;
-  hasLogin: boolean;
-}
+import request from "common/request";
+import {CurUser, LoginRequest, LoginResponse} from "entity/session";
 
 export class API {
-  // mock一个耗时3秒的异步请求
-  @delayPromise(3)
-  getCurUser(): Promise<GetCurUserResponse> {
-    return Promise.resolve({ uid: "0", username: "guest", hasLogin: false });
+  public getCurUser(): Promise<CurUser> {
+    return request("get", "/ajax/session");
   }
-  // mock一个耗时3秒的异步请求
-  @delayPromise(2)
-  login(username: string, password: string): Promise<LoginResponse> {
-    return Promise.resolve({ uid: "1", username: "jimmy", hasLogin: true });
+  public login(req: LoginRequest): Promise<LoginResponse> {
+    return request("put", "/ajax/session", {}, req);
   }
 }
 

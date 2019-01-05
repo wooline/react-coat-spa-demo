@@ -1,26 +1,25 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "outDir": "build/dist",
+    "outDir": "build",
     "module": "esnext",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": ["es2017", "dom"],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
+    "newLine": "LF",
     "moduleResolution": "node",
     "rootDir": "src",
-    "importHelpers": true,
-    "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": false,
-    "strictNullChecks": true,
+    "importHelpers": true,
+    "strict": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/setupTests.ts"]
+  "include": ["src"]
 }

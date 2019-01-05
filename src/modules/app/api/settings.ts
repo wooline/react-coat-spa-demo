@@ -1,16 +1,13 @@
-import { delayPromise } from "react-coat-pkg";
-
-export interface GetSettingsResponse {
-  title: string;
-}
+import request from "common/request";
+import {ProjectConfig} from "entity/global";
 
 export class API {
-  // mock一个耗时3秒的异步请求
-  @delayPromise(3)
-  getSettings(): Promise<GetSettingsResponse> {
-    return Promise.resolve({ title: "Hello world" });
+  public getSettings(): Promise<ProjectConfig> {
+    return request("get", "/ajax/project-config");
   }
-  reportError(error: any): Promise<boolean> {
+
+  public reportError(error: any): Promise<boolean> {
+    console.log("report", error.message);
     return Promise.resolve(true);
   }
 }
