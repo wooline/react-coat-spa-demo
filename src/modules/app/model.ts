@@ -1,11 +1,11 @@
 import {Toast} from "antd-mobile";
-import {CustomError, RedirectError} from "common/Errors";
-import {isCur, toUrl} from "common/routers";
+import {CustomError} from "common/Errors";
+import {toUrl} from "common/routers";
 import {ProjectConfig, StartupStep} from "entity/global";
 import {CurUser} from "entity/session";
-import {moduleGetter, RootState} from "modules";
+import {RootState} from "modules";
 import {ModuleNames} from "modules/names";
-import {Actions, BaseModuleHandlers, BaseModuleState, effect, ERROR, exportModel, LoadingState, loadModel, LOCATION_CHANGE, reducer} from "react-coat";
+import {Actions, BaseModuleHandlers, BaseModuleState, effect, ERROR, exportModel, LoadingState, LOCATION_CHANGE, reducer} from "react-coat";
 import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
 
@@ -112,18 +112,6 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
       curUser,
       startupStep: StartupStep.configLoaded,
     });
-    const views = this.rootState.router.views;
-    if (isCur(views, ModuleNames.app, "LoginForm") && curUser.hasLogin) {
-      throw new RedirectError("301", "/");
-    }
-
-    const subModules: ModuleNames[] = [ModuleNames.photos, ModuleNames.videos];
-    for (const subModule of subModules) {
-      if (isCur(views, subModule)) {
-        await loadModel(moduleGetter[subModule as any]).then(subModel => subModel(this.store));
-        break;
-      }
-    }
   }
 }
 

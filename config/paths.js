@@ -7,7 +7,6 @@ const scriptsPath = path.join(rootPath, "./scripts");
 const publicPath = path.join(rootPath, "./public");
 const distPath = path.join(rootPath, "./build");
 const distClientPath = path.join(distPath, "./client");
-const distServerPath = path.join(distPath, "./server");
 
 module.exports = {
   rootPath,
@@ -17,5 +16,4 @@ module.exports = {
   publicPath,
   distPath,
   distClientPath,
-  distServerPath,
 };

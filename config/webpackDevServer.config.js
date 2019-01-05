@@ -1,4 +1,3 @@
-const devServer = require("react-coat-dev-utils/express-middleware/dev-server").default;
 const devMock = require("react-coat-dev-utils/express-middleware/dev-mock").default;
 const path = require("path");
 const paths = require("./paths");
@@ -10,7 +9,7 @@ const config = {
   watchContentBase: true,
   publicPath: "/",
   compress: true,
-  historyApiFallback: !appPackage.devServer.ssr,
+  historyApiFallback: true,
   hot: true,
   overlay: {
     warnings: true,
@@ -26,7 +25,6 @@ const config = {
   },
   proxy: appPackage.devServer.proxy,
   before: app => {
-    app.use(devServer(appPackage.devServer.ssr, appPackage.devServer.proxy));
     app.use(devMock(appPackage.devServer.mock, appPackage.devServer.proxy, true));
   },
 };
