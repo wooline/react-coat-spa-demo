@@ -48,6 +48,11 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
   protected putRouteData(routeData: Partial<State>): State {
     return {...this.state, ...routeData};
   }
+  @reducer
+  protected putCurUser(curUser: CurUser): State {
+    return {...this.state, curUser};
+  }
+
   @effect("login") // 使用自定义loading状态
   public async login(payload: {username: string; password: string}) {
     const loginResult = await sessionService.api.login(payload);
@@ -58,24 +63,16 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
       alert(loginResult.error.message);
     }
   }
-
-  @reducer
-  protected putCurUser(curUser: CurUser): State {
-    return {...this.state, curUser};
-  }
-
   @effect()
   protected async parseRouter() {
     const searchData = this.rootState.router.wholeSearchData.app! || {};
     // const hashData = this.rootState.router.wholeHashData.app! || {};
     this.dispatch(this.callThisAction(this.putRouteData, {showSearch: searchData.showSearch, showLoginPop: searchData.showLoginPop, showRegisterPop: searchData.showRegisterPop}));
   }
-
   @effect(null)
   protected async [LOCATION_CHANGE]() {
     this.dispatch(this.callThisAction(this.parseRouter));
   }
-
   // uncatched错误会触发@@framework/ERROR，兼听并发送给后台
   // 兼听外部模块的Action，不需要手动触发，所以请使用protected或private
   @effect(null) // 不需要loading，设置为null
@@ -89,23 +86,16 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
       this.updateState({showLoginPop: true});
       this.dispatch(this.routerActions.replace(url));
     } else if (error.code === "301" || error.code === "302") {
-      const url = error.detail as string;
-      if (url.endsWith("404.html")) {
-        window.location.href = error.detail;
-      } else {
-        this.dispatch(this.routerActions.replace(url));
-      }
+      this.dispatch(this.routerActions.replace(error.detail));
     } else {
       Toast.fail(error.message);
       await settingsService.api.reportError(error);
     }
   }
-
   // 兼听自已的INIT Action，做一些异步数据请求，不需要手动触发，所以请使用protected或private
   @effect()
   protected async [ModuleNames.app + "/INIT"]() {
     this.parseRouter();
-
     const [projectConfig, curUser] = await Promise.all([settingsService.api.getSettings(), sessionService.api.getCurUser()]);
     this.updateState({
       projectConfig,

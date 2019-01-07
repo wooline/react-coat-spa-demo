@@ -1,6 +1,7 @@
 import {Modal} from "antd-mobile";
 import "asset/css/global.less";
 import {toPath, toUrl} from "common/routers";
+import NotFound from "components/NotFound";
 import {routerActions} from "connected-react-router";
 import {StartupStep} from "entity/global";
 import {moduleGetter, RootState, RouterData} from "modules";
@@ -8,8 +9,7 @@ import {ModuleNames} from "modules/names";
 import * as React from "react";
 import {LoadingState, loadView} from "react-coat";
 import {connect, DispatchProp} from "react-redux";
-import {Route, Switch} from "react-router-dom";
-
+import {Redirect, Route, Switch} from "react-router-dom";
 import BottomNav from "./BottomNav";
 import "./index.less";
 import Loading from "./Loading";
@@ -45,10 +45,12 @@ class Component extends React.PureComponent<Props> {
           <div className="g-page">
             <TopNav />
             <Switch>
+              <Redirect exact={true} path="/" to={toPath(ModuleNames.photos)} />
               <Route exact={false} path={toPath(ModuleNames.photos)} component={PhotosView} />
               <Route exact={false} path={toPath(ModuleNames.videos)} component={VideosView} />
               <Route exact={false} path={toPath(ModuleNames.messages)} component={MessagesView} />
               <Route exact={true} path={toPath(ModuleNames.app, "LoginForm")} component={LoginForm} />
+              <Route component={NotFound} />
             </Switch>
             <BottomNav />
           </div>

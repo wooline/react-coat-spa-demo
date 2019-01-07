@@ -7,8 +7,7 @@
     "start": "cross-env NODE_ENV=development node scripts/start.js",
     "build": "cross-env NODE_ENV=production node scripts/build.js",
     "prod-express-demo": "npm run build && node scripts/demo.js",
-    "gen-icon": "node scripts/gen-icon.js",
-    "test": "cross-env NODE_ENV=development node scripts/test.js"
+    "gen-icon": "node scripts/gen-icon.js"
   },
   "repository": {
     "type": "git",
