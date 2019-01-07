@@ -139,21 +139,6 @@ export function unserializeUrlQuery(query: string): any {
   }
   return args;
 }
-/* export function mergeSearch<S>(options: Partial<S>, def: S): Partial<S> {
-  const search = {...def, ...options};
-  return Object.keys(search).reduce((prev, cur) => {
-    if (typeof search[cur] === "object") {
-      if (JSON.stringify(search[cur]) !== JSON.stringify(def[cur])) {
-        prev[cur] = search[cur];
-      }
-    } else {
-      if (search[cur] !== def[cur]) {
-        prev[cur] = search[cur];
-      }
-    }
-    return prev;
-  }, {});
-} */
 
 function parsePathname(
   pathname: string
@@ -178,6 +163,7 @@ function parsePathname(
   });
   return {views, pathData};
 }
+
 function parseRoute(pre: {}, cur: string) {
   const [key, val] = cur.split("=");
   if (key) {
@@ -197,17 +183,17 @@ function parseRoute(pre: {}, cur: string) {
 export const routerParser: RouterParser<RootRouter> = (nextRouter, prevRouter) => {
   const nRouter: RootRouter = {...nextRouter};
   const changed = {pathname: false, search: false, hash: false};
-  if (prevRouter && nextRouter.location.pathname !== prevRouter.location.pathname) {
+  if (!prevRouter || nextRouter.location.pathname !== prevRouter.location.pathname) {
     const {views, pathData} = parsePathname(nextRouter.location.pathname);
     nRouter.views = views;
     nRouter.pathData = pathData;
     changed.pathname = true;
   }
-  if (prevRouter && nextRouter.location.search !== prevRouter.location.search) {
+  if (!prevRouter || nextRouter.location.search !== prevRouter.location.search) {
     nRouter.searchData = nextRouter.location.search.split(/[&?]/).reduce(parseRoute, {});
     changed.search = true;
   }
-  if (prevRouter && nextRouter.location.hash !== prevRouter.location.hash) {
+  if (!prevRouter || nextRouter.location.hash !== prevRouter.location.hash) {
     nRouter.hashData = nextRouter.location.hash.split(/[&#]/).reduce(parseRoute, {});
     changed.hash = true;
   }

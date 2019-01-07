@@ -21,8 +21,8 @@ const htmlReplace = [
     replacement: appPackage.devServer.url,
   },
   {
-    pattern: "@@CLIENT_PUBLIC",
-    replacement: conEnv.clientPublicPath,
+    pattern: "@@PUBLIC",
+    replacement: conEnv.publicPath,
   },
 ];
 
@@ -67,13 +67,13 @@ const getStyleLoaders = (cssOptions, preProcessor, preProcessorOptions) => {
   return loaders;
 };
 
-const clientConfig = {
+const config = {
   mode: "development",
-  entry: [path.join(paths.srcPath, "./client")],
+  entry: [path.join(paths.srcPath, "./index")],
   output: {
     pathinfo: true, // 输入代码添加额外的路径注释，提高代码可读性
-    filename: "client/js/[name].js",
-    chunkFilename: "client/js/[name].chunk.js",
+    filename: "js/[name].js",
+    chunkFilename: "js/[name].chunk.js",
     publicPath: "/",
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/"),
@@ -132,14 +132,14 @@ const clientConfig = {
         loader: require.resolve("url-loader"),
         query: {
           limit: 50,
-          name: "client/media/[name].[hash:8].[ext]",
+          name: "media/[name].[hash:8].[ext]",
         },
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         loader: "file-loader",
         options: {
-          name: "client/media/[name].[hash:8].[ext]",
+          name: "media/[name].[hash:8].[ext]",
         },
       },
     ],
@@ -148,11 +148,11 @@ const clientConfig = {
     new HtmlWebpackPlugin({
       chunks: ["runtime", "main"],
       chunksSortMode: "manual",
-      template: path.join(paths.publicPath, "./client/index.html"),
+      template: path.join(paths.publicPath, "./index.html"),
     }),
     new HtmlReplaceWebpackPlugin(htmlReplace),
     new ManifestPlugin({
-      fileName: "client/asset-manifest.json",
+      fileName: "asset-manifest.json",
       publicPath: "/",
     }),
     new StylelintPlugin({
@@ -172,4 +172,4 @@ const clientConfig = {
   ],
 };
 
-module.exports = clientConfig;
+module.exports = config;

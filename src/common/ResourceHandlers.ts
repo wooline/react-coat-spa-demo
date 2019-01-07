@@ -11,22 +11,6 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
   constructor(initState: S, protected config: {api: R["API"]}) {
     super(initState);
   }
-  /* @reducer
-  protected putListData(listData: R["ListData"]): S {
-    return {...this.state, listData};
-  }
-  @reducer
-  protected putItemEditor(itemEditor?: R["ItemEditor"]): S {
-    return {...this.state, itemEditor};
-  }
-  @reducer
-  protected putItemDetail(itemDetail: R["ItemDetail"] | undefined): S {
-    return {...this.state, itemDetail};
-  }
-  @reducer
-  protected putSelectedIds(selectedIds: string[]): S {
-    return {...this.state, selectedIds};
-  } */
   @reducer
   public putRouteData(routeData: Partial<S>): S {
     return {...this.state, ...routeData};

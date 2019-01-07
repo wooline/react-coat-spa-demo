@@ -1,7 +1,6 @@
 import {Modal} from "antd-mobile";
 import "asset/css/global.less";
 import {toPath, toUrl} from "common/routers";
-import ClientRoute from "components/ClientRoute";
 import {routerActions} from "connected-react-router";
 import {StartupStep} from "entity/global";
 import {moduleGetter, RootState, RouterData} from "modules";
@@ -48,7 +47,7 @@ class Component extends React.PureComponent<Props> {
             <Switch>
               <Route exact={false} path={toPath(ModuleNames.photos)} component={PhotosView} />
               <Route exact={false} path={toPath(ModuleNames.videos)} component={VideosView} />
-              <ClientRoute exact={false} path={toPath(ModuleNames.messages)} component={MessagesView} />
+              <Route exact={false} path={toPath(ModuleNames.messages)} component={MessagesView} />
               <Route exact={true} path={toPath(ModuleNames.app, "LoginForm")} component={LoginForm} />
             </Switch>
             <BottomNav />

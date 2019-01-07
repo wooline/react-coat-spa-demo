@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" href="@@CLIENT_PUBLICfavicon.ico" />
+    <link rel="shortcut icon" href="@@PUBLICfavicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <title>React App</title>
@@ -148,14 +148,14 @@
         if (!global.InitEnv) {
           global.InitEnv = isDev
             ? {
-                clientPublicPath: "@@CLIENT_PUBLIC",
+                clientPublicPath: "@@PUBLIC",
                 apiServer: {
                   "^/ajax/": "@@LOCALHOST" + "/ajax/",
                   "^/captcha/": "@@LOCALHOST" + "/captcha/",
                 },
               }
             : {
-                clientPublicPath: "@@CLIENT_PUBLIC",
+                clientPublicPath: "@@PUBLIC",
                 apiServer: {
                   "^/ajax/": "@@LOCALHOST" + "/ajax/",
                   "^/captcha/": "@@LOCALHOST" + "/captcha/",

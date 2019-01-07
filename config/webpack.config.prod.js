@@ -22,8 +22,8 @@ const htmlReplace = [
     replacement: appPackage.devServer.url,
   },
   {
-    pattern: "@@CLIENT_PUBLIC",
-    replacement: conEnv.clientPublicPath,
+    pattern: "@@PUBLIC",
+    replacement: conEnv.publicPath,
   },
 ];
 
@@ -73,17 +73,17 @@ const getStyleLoaders = (cssOptions, preProcessor, preProcessorOptions) => {
   return loaders;
 };
 
-const clientConfig = {
+const config = {
   mode: "production",
   target: "web",
   bail: true,
   devtool: false,
-  entry: [path.join(paths.srcPath, "./client")],
+  entry: [path.join(paths.srcPath, "./index")],
   output: {
-    path: paths.distClientPath,
+    path: paths.distPath,
     filename: "js/[name].[chunkhash:8].js",
     chunkFilename: "js/[name].[chunkhash:8].chunk.js",
-    publicPath: conEnv.clientPublicPath,
+    publicPath: conEnv.publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info => path.relative(paths.srcPath, info.absoluteResourcePath).replace(/\\/g, "/"),
   },
@@ -168,7 +168,7 @@ const clientConfig = {
     new HtmlWebpackPlugin({
       chunks: ["runtime", "main"],
       chunksSortMode: "manual",
-      template: path.join(paths.publicPath, "./client/index.html"),
+      template: path.join(paths.publicPath, "./index.html"),
     }),
     new HtmlReplaceWebpackPlugin(htmlReplace),
     new MiniCssExtractPlugin({
@@ -176,7 +176,7 @@ const clientConfig = {
     }),
     new ManifestPlugin({
       fileName: "asset-manifest.json",
-      publicPath: conEnv.clientPublicPath,
+      publicPath: conEnv.publicPath,
     }),
     new StylelintPlugin({
       configFile: path.join(paths.rootPath, "./.stylelintrc.json"),
@@ -194,4 +194,4 @@ const clientConfig = {
   ],
 };
 
-module.exports = clientConfig;
+module.exports = config;

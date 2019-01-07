@@ -18,7 +18,6 @@ const config = {
   stats: {
     colors: true,
   },
-  // clientLogLevel: 'none',
   quiet: true,
   watchOptions: {
     ignored: /node_modules/,

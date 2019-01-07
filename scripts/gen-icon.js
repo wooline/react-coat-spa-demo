@@ -14,7 +14,7 @@ const componentBoilerplatePath = path.join(paths.scriptsPath, "./icon-boilerplat
 const cssPath = path.join(paths.srcPath, "./asset/css/iconfont.less");
 const assetFolderPath = path.join(paths.srcPath, "./asset/font");
 const componentPath = path.join(paths.srcPath, "./components/Icon.tsx");
-const htmlPath = path.resolve(paths.publicPath, "./client/icon.html");
+const htmlPath = path.resolve(paths.publicPath, "./icon.html");
 
 function classNameToEnum(className) {
   if (!/^icon-[a-zA-Z](.*)$/.test(className)) {
