@@ -8,6 +8,7 @@ import {Dispatch} from "redux";
 type MData = {[moduleName: string]: {[key: string]: any}};
 type Views = {[moduleName: string]: {[viewName: string]: boolean}};
 
+// 转换一下路由配置的数据结构
 const modulePaths = ((maps: {[mName: string]: string | {[vName: string]: string}}) => {
   const urls: {[pathname: string]: [string, string]} = {};
   for (const mName in maps) {
@@ -27,6 +28,7 @@ const modulePaths = ((maps: {[mName: string]: string | {[vName: string]: string}
   return urls;
 })(moduleToUrl as any);
 
+// 转换一下路由默认值的数据结构
 const {defSearch, defHash}: {defSearch: RouterData["wholeSearchData"]; defHash: RouterData["wholeHashData"]} = (routeData => {
   const search = {};
   const hash = {};
@@ -39,6 +41,7 @@ const {defSearch, defHash}: {defSearch: RouterData["wholeSearchData"]; defHash: 
   return {defSearch: search, defHash: hash};
 })(defRouteData);
 
+// 用JSON格式序列化路由参数，并加上模块名作前缀
 function serialize(data: {[key: string]: any}): string {
   const flatArr: string[] = [];
   for (const mName in data) {
@@ -62,16 +65,14 @@ function serialize(data: {[key: string]: any}): string {
   }
 }
 
+// 根据路由配置，将view推导出路由pathname
 export function toPath<N extends keyof RouterData["pathData"], M extends ReturnModule<ModuleGetter[N]>, V extends keyof M["views"], P extends RouterData["pathData"][N]>(
   moduleName: N,
   viewName?: V,
   params?: P
 ): string {
-  viewName = viewName || ("Main" as any);
-  let pathExp: string | {[viewName: string]: string} = moduleToUrl[moduleName] as string;
-  if (typeof pathExp !== "string") {
-    pathExp = pathExp[viewName as string];
-  }
+  viewName = viewName || ("Main" as V);
+  const pathExp = moduleToUrl[moduleName as "app"][viewName as "Main"] || "";
   let pathname = pathExp;
   if (params) {
     pathname = pathExp.replace(/:\w+/g, flag => {
@@ -85,22 +86,52 @@ export function toPath<N extends keyof RouterData["pathData"], M extends ReturnM
   }
   return pathname;
 }
-export function toUrl<R extends RouterData["searchData"], H extends RouterData["hashData"]>(pathname: string, searchData?: R | string, hashData?: H | string): string {
+
+// 合并默认路由参数
+function mergeDefData(views: Views, data: any, def: any) {
+  const newData = {...data};
+  Object.keys(views).forEach(mName => {
+    if (!newData[mName]) {
+      newData[mName] = {};
+    }
+  });
+  Object.keys(newData).forEach(mName => {
+    if (def[mName]) {
+      newData[mName] = assignDeep({}, def[mName], newData[mName]);
+    }
+  });
+  return newData;
+}
+
+// 排除默认路由参数
+const excludeDefData = (data: any, def: any) => {
+  const result: any = {};
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      if (typeof data[key] === "object" && def[key] && !Array.isArray(def[key])) {
+        result[key] = excludeDefData(data[key], def[key]);
+      } else if (data[key] !== def[key]) {
+        result[key] = data[key];
+      }
+    }
+  }
+  if (Object.keys(result).length === 0) {
+    return undefined;
+  }
+  return result;
+};
+
+// 格式化url，如果是默认参数则省去
+export function toUrl(pathname: string, searchData?: RouterData["searchData"], hashData?: RouterData["hashData"]): string {
   let url = pathname;
   if (searchData) {
-    let str = searchData as string;
-    if (typeof searchData !== "string") {
-      str = serialize(excludeDefData(searchData, defSearch));
-    }
+    const str = serialize(excludeDefData(searchData, defSearch));
     if (str) {
       url += "?" + str.replace("?", "");
     }
   }
   if (hashData) {
-    let str = hashData as string;
-    if (typeof hashData !== "string") {
-      str = serialize(excludeDefData(hashData, defHash));
-    }
+    const str = serialize(excludeDefData(hashData, defHash));
     if (str) {
       url += "#" + str.replace("#", "");
     }
@@ -108,6 +139,7 @@ export function toUrl<R extends RouterData["searchData"], H extends RouterData["
   return url;
 }
 
+// 根据路由配置，判断某view是否被当前展示
 export function isCur<N extends keyof ModuleGetter, M extends ReturnModule<ModuleGetter[N]>, V extends keyof M["views"]>(views: RouterData["views"], moduleName: N, viewName?: V): boolean {
   return views[moduleName] && views[moduleName][(viewName as string) || "Main"];
 }
@@ -122,6 +154,7 @@ export function linkTo(e: React.MouseEvent<HTMLAnchorElement>, dispatch: Dispatc
 
 const ISO_DATE_FORMAT = /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?(Z|[+-][01]\d:[0-5]\d)$/;
 
+// 反序列化JSON字串，如果是标准的日期格式，将自动生成日期
 export function unserializeUrlQuery(query: string): any {
   if (!query) {
     return "";
@@ -140,12 +173,8 @@ export function unserializeUrlQuery(query: string): any {
   return args;
 }
 
-function parsePathname(
-  pathname: string
-): {
-  pathData: MData;
-  views: Views;
-} {
+// 解析pathname
+function parsePathname(pathname: string): {pathData: MData; views: Views} {
   const views: Views = {};
   const pathData: MData = {};
   Object.keys(modulePaths).forEach(url => {
@@ -164,6 +193,7 @@ function parsePathname(
   return {views, pathData};
 }
 
+// 反序列化路由参数，将module前缀去掉，并转换成结构
 function parseRoute(pre: {}, cur: string) {
   const [key, val] = cur.split("=");
   if (key) {
@@ -180,6 +210,7 @@ function parseRoute(pre: {}, cur: string) {
   return pre;
 }
 
+// 完整的路由解析器
 export const routerParser: RouterParser<RootRouter> = (nextRouter, prevRouter) => {
   const nRouter: RootRouter = {...nextRouter};
   const changed = {pathname: false, search: false, hash: false};
@@ -204,34 +235,4 @@ export const routerParser: RouterParser<RootRouter> = (nextRouter, prevRouter) =
     nRouter.wholeHashData = mergeDefData(nRouter.views, nRouter.hashData, defHash);
   }
   return nRouter;
-};
-function mergeDefData(views: Views, data: any, def: any) {
-  const newData = {...data};
-  Object.keys(views).forEach(mName => {
-    if (!newData[mName]) {
-      newData[mName] = {};
-    }
-  });
-  Object.keys(newData).forEach(mName => {
-    if (def[mName]) {
-      newData[mName] = assignDeep({}, def[mName], newData[mName]);
-    }
-  });
-  return newData;
-}
-const excludeDefData = (data: any, def: any) => {
-  const result: any = {};
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      if (typeof data[key] === "object" && def[key] && !Array.isArray(def[key])) {
-        result[key] = excludeDefData(data[key], def[key]);
-      } else if (data[key] !== def[key]) {
-        result[key] = data[key];
-      }
-    }
-  }
-  if (Object.keys(result).length === 0) {
-    return undefined;
-  }
-  return result;
 };

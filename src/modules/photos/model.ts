@@ -4,6 +4,7 @@ import {ModuleNames} from "modules/names";
 import {Actions, effect, exportModel} from "react-coat";
 import api from "./api";
 
+// 定义本导出本模块的 ModuleState
 export {State} from "entity/photo";
 
 class ModuleHandlers extends ArticleHandlers<State, PhotoResource> {
@@ -13,7 +14,7 @@ class ModuleHandlers extends ArticleHandlers<State, PhotoResource> {
   @effect()
   protected async parseRouter() {
     const result = await super.parseRouter();
-    this.dispatch(this.callThisAction(this.putRouteData, {showComment: result.moduleSearchData.showComment}));
+    this.updateState({showComment: result.moduleSearchData.showComment});
     return result;
   }
   @effect()

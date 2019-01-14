@@ -4,6 +4,7 @@ import {ModuleNames} from "modules/names";
 import {Actions, effect, exportModel} from "react-coat";
 import api from "./api";
 
+// 定义本导出本模块的 ModuleState
 export {State} from "entity/video";
 
 class ModuleHandlers extends ArticleHandlers<State, VideoResource> {

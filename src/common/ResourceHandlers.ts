@@ -4,27 +4,20 @@ import {equal} from "common/utils";
 import {Resource} from "entity/resource";
 import {RootState} from "modules";
 import {ModuleNames} from "modules/names";
-import {BaseModuleHandlers, effect, LOCATION_CHANGE, reducer, RouterState} from "react-coat";
-//  mergeSearch, replaceQuery
+import {BaseModuleHandlers, effect, LOCATION_CHANGE, RouterState} from "react-coat";
 
 export default class Handlers<S extends R["State"] = R["State"], R extends Resource = Resource> extends BaseModuleHandlers<S, RootState, ModuleNames> {
   constructor(initState: S, protected config: {api: R["API"]}) {
     super(initState);
   }
-  @reducer
-  public putRouteData(routeData: Partial<S>): S {
-    return {...this.state, ...routeData};
-  }
   @effect()
   public async searchList(options: R["ListOptions"] = {}) {
     const listSearch: R["ListSearch"] = {...this.state.listSearch!, ...options};
-    this.updateState({listSearch} as Partial<S>);
     const {listItems, listSummary} = await this.config.api.searchList(listSearch);
-    this.updateState({listItems, listSummary} as Partial<S>);
+    this.updateState({listSearch, listItems, listSummary} as Partial<S>);
   }
   @effect()
   public async getItemDetail(itemDetailId: string) {
-    this.updateState({itemDetailId} as Partial<S>);
     const arr: Array<Promise<any>> = [this.config.api.getItemDetail!(itemDetailId)];
     if (this.config.api.hitItem) {
       arr.push(this.config.api.hitItem!(itemDetailId));
@@ -62,12 +55,13 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
     this.updateState({selectedIds: []} as any); // 清空当前选中项
     this.searchList(); // 刷新当前页
   }
+  // 因为LOCATION_CHANGE被多个模块监听，但是只有当前模块才需要处理，所以为了性能，不需要监控loading状态，改为parseRouter时监控loading
   @effect(null)
   protected async [LOCATION_CHANGE](router: RouterState) {
     const {views} = this.rootState.router;
     if (isCur(views, this.namespace)) {
-      // 因为LOCATION_CHANGE被多个模块监听，但是只有当前模块才需要处理，所以为了性能，不需要监控loading状态，改为parseRouter时监控loading
       // 直接调用this.parseRouter()，将不会触发action，也不会监控loading状态
+      // 由于 parseRouter 是 protected 不对外开放的，所以这里不能使用 this.actions.parseRouter() 必须使用 this.callThisAction(this.parseRouter)
       this.dispatch(this.callThisAction(this.parseRouter));
     }
   }
@@ -80,7 +74,7 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
     const appHashData = wholeHashData[ModuleNames.app]! || {};
 
     if (isCur(views, this.namespace, "Details" as any)) {
-      if (this.state.itemDetailId !== modulePathData.itemId) {
+      if (appHashData.refresh || (appHashData.refresh === null && (!this.state.itemDetail || this.state.itemDetail.id !== modulePathData.itemId))) {
         await this.getItemDetail(modulePathData.itemId!);
       }
     } else if (isCur(views, this.namespace, "List" as any)) {

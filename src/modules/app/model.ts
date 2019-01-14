@@ -1,6 +1,5 @@
 import {Toast} from "antd-mobile";
 import {CustomError} from "common/Errors";
-import {toUrl} from "common/routers";
 import {ProjectConfig, StartupStep} from "entity/global";
 import {CurUser} from "entity/session";
 import {RootState} from "modules";
@@ -10,9 +9,9 @@ import * as sessionService from "./api/session";
 import * as settingsService from "./api/settings";
 
 // 定义本模块的State类型
-
 export interface State extends BaseModuleState {
   showLoginPop?: boolean;
+  showNotFoundPop?: boolean;
   showRegisterPop?: boolean;
   showSearch?: boolean;
   projectConfig: ProjectConfig | null;
@@ -45,14 +44,17 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
     return {...this.state, startupStep};
   }
   @reducer
-  protected putRouteData(routeData: Partial<State>): State {
-    return {...this.state, ...routeData};
-  }
-  @reducer
   protected putCurUser(curUser: CurUser): State {
     return {...this.state, curUser};
   }
-
+  @reducer
+  public putCloseLoginPop(): State {
+    return {...this.state, showLoginPop: false};
+  }
+  @reducer
+  public putCloseNotFoundPop(): State {
+    return {...this.state, showNotFoundPop: false};
+  }
   @effect("login") // 使用自定义loading状态
   public async login(payload: {username: string; password: string}) {
     const loginResult = await sessionService.api.login(payload);
@@ -66,11 +68,14 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
   @effect()
   protected async parseRouter() {
     const searchData = this.rootState.router.wholeSearchData.app! || {};
-    // const hashData = this.rootState.router.wholeHashData.app! || {};
-    this.dispatch(this.callThisAction(this.putRouteData, {showSearch: searchData.showSearch, showLoginPop: searchData.showLoginPop, showRegisterPop: searchData.showRegisterPop}));
+    this.updateState({
+      showSearch: searchData.showSearch,
+      showRegisterPop: searchData.showRegisterPop,
+    });
   }
   @effect(null)
   protected async [LOCATION_CHANGE]() {
+    // 由于 parseRouter 是 protected 不对外开放的，所以这里不能使用 this.actions.parseRouter() 必须使用 this.callThisAction(this.parseRouter)
     this.dispatch(this.callThisAction(this.parseRouter));
   }
   // uncatched错误会触发@@framework/ERROR，兼听并发送给后台
@@ -78,13 +83,9 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
   @effect(null) // 不需要loading，设置为null
   protected async [ERROR](error: CustomError) {
     if (error.code === "401") {
-      const {
-        searchData,
-        location: {pathname},
-      } = this.rootState.router;
-      const url = toUrl(pathname, {...searchData, [ModuleNames.app]: {...searchData.app, showLoginPop: true}});
       this.updateState({showLoginPop: true});
-      this.dispatch(this.routerActions.replace(url));
+    } else if (error.code === "404") {
+      this.updateState({showNotFoundPop: true});
     } else if (error.code === "301" || error.code === "302") {
       this.dispatch(this.routerActions.replace(error.detail));
     } else {

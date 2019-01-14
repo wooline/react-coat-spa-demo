@@ -29,7 +29,7 @@ export const moduleGetter = {
   },
 };
 
-export type ModuleGetter = ModulesDefined<typeof moduleGetter>;
+export type ModuleGetter = ModulesDefined<typeof moduleGetter>; // 验证一下是否有模块忘了配置
 
 // 定义整站的路由参数默认值
 export const defRouteData = {
@@ -40,8 +40,10 @@ export const defRouteData = {
   [ModuleNames.comments]: commentsDefRouteData,
 };
 
-type ModuleRouterData = ModulesDefined<typeof defRouteData>;
+type ModuleRouterData = ModulesDefined<typeof defRouteData>; // 验证一下是否有模块忘了配置
+
 type ModuleRouterDataOptions = {[k in keyof ModuleRouterData]: DeepPartial<ModuleRouterData[k]>}; // 路由参数均为可选项
+
 export type RouterData = {
   views: {[moduleName: string]: {[viewName: string]: boolean}};
   pathData: {[M in keyof ModuleRouterData]?: ModuleRouterData[M]["pathData"]};
@@ -50,7 +52,9 @@ export type RouterData = {
   wholeSearchData: {[M in keyof ModuleRouterData]?: ModuleRouterData[M]["searchData"]};
   wholeHashData: {[M in keyof ModuleRouterData]?: ModuleRouterData[M]["hashData"]};
 };
+
 export type RootRouter = RouterState & RouterData;
+
 // 定义整站Module States
 interface States {
   [ModuleNames.app]: AppState;
@@ -61,17 +65,17 @@ interface States {
 }
 
 // 定义整站的Root State
-export type RootState = BaseState<RootRouter> & ModulesDefined<States>;
+export type RootState = BaseState<RootRouter> & ModulesDefined<States>; // 验证一下是否有模块忘了配置
 
 export type ReturnModule<T extends () => any> = T extends () => Promise<infer R> ? R : T extends () => infer R ? R : Module;
 
 // 定义整站路由与view的匹配模式
 export const moduleToUrl: {[K in keyof ModuleGetter]: {[V in keyof ReturnModule<ModuleGetter[K]>["views"]]+?: string}} = {
-  app: {Main: "/", LoginForm: "/login"},
+  app: {Main: "/"},
   photos: {Main: "/photos", List: "/photos/list", Details: "/photos/item/:itemId"},
   videos: {Main: "/videos", List: "/videos/list", Details: "/videos/item/:itemId"},
   messages: {Main: "/messages", List: "/messages/list"},
   comments: {Main: "/:type/item/:typeId/comments", List: "/:type/item/:typeId/comments/list", Details: "/:type/item/:typeId/comments/item/:itemId"},
 };
 
-export type ModuleToUrl = ModulesDefined<typeof moduleToUrl>;
+export type ModuleToUrl = ModulesDefined<typeof moduleToUrl>; // 验证一下是否有模块忘了配置

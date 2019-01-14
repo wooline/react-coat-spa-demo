@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HtmlReplaceWebpackPlugin = require("html-replace-webpack-plugin");
 const PostcssPxtorem = require("postcss-pxtorem");
-const ManifestPlugin = require("webpack-manifest-plugin");
+// const ManifestPlugin = require("webpack-manifest-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const PostcssFlexbugsFixes = require("postcss-flexbugs-fixes");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
@@ -12,18 +12,17 @@ const TSImportPlugin = require("ts-import-plugin");
 const StylelintPlugin = require("stylelint-webpack-plugin");
 const paths = require("./paths");
 
-const appPackage = require(path.join(paths.rootPath, "./package.json"));
-const conPath = path.join(paths.configPath, "./prod");
+const conPath = path.join(paths.configPath, process.env.WEBSITE || "./prod");
 const conEnv = require(path.join(conPath, "./env"));
 // const EnvDefine = {BBBB: JSON.stringify(appPackage.devServer.url), IS_DEV: JSON.stringify(true)};
 const htmlReplace = [
   {
-    pattern: "@@LOCALHOST",
-    replacement: appPackage.devServer.url,
+    pattern: "$$ENV$$",
+    replacement: JSON.stringify(conEnv),
   },
   {
-    pattern: "@@PUBLIC",
-    replacement: conEnv.publicPath,
+    pattern: "$$CLIENT_PUBLIC_PATH$$",
+    replacement: conEnv.clientPublicPath,
   },
 ];
 
@@ -83,7 +82,7 @@ const config = {
     path: paths.distPath,
     filename: "js/[name].[chunkhash:8].js",
     chunkFilename: "js/[name].[chunkhash:8].chunk.js",
-    publicPath: conEnv.publicPath,
+    publicPath: conEnv.clientPublicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info => path.relative(paths.srcPath, info.absoluteResourcePath).replace(/\\/g, "/"),
   },
@@ -174,10 +173,10 @@ const config = {
     new MiniCssExtractPlugin({
       filename: "css/[name].[contenthash:8].css",
     }),
-    new ManifestPlugin({
+    /* new ManifestPlugin({
       fileName: "asset-manifest.json",
-      publicPath: conEnv.publicPath,
-    }),
+      publicPath: conEnv.clientPublicPath,
+    }), */
     new StylelintPlugin({
       configFile: path.join(paths.rootPath, "./.stylelintrc.json"),
       context: paths.srcPath,
