@@ -60,7 +60,7 @@
     "yargs": "^12.0.0"
   },
   "devDependencies": {
-    "react-coat-dev-utils": "^1.0.0",
+    "react-coat-dev-utils": "^1.0.1",
     "react-coat-dev-pkg": "^1.0.2",
     "typescript": "^3.2.2"
   },
