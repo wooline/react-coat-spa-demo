@@ -14,35 +14,20 @@ interface Props extends DispatchProp {
   hasLogin: boolean;
   views: RouterData["views"];
 }
-const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => e.preventDefault();
 
 class Component extends React.PureComponent<Props> {
   public render() {
-    const {dispatch, views} = this.props;
-    const photosUrl = toUrl(toPath(ModuleNames.photos, "List"), {}, {app: {refresh: true}});
-    const videosUrl = toUrl(toPath(ModuleNames.videos, "List"), {}, {app: {refresh: true}});
-    const messagesUrl = toUrl(toPath(ModuleNames.messages, "List"), {}, {app: {refresh: true}});
-    const PhotosLink = (
-      <a href={photosUrl} onClick={onClick}>
-        <Icon type={IconClass.PICTURE} />
-      </a>
-    );
-    const VideosLink = (
-      <a href={videosUrl} onClick={onClick}>
-        <Icon type={IconClass.LIVE} />
-      </a>
-    );
-    const MessagesLink = (
-      <a href={messagesUrl} onClick={onClick}>
-        <Icon type={IconClass.MESSAGE} />
-      </a>
-    );
+    const {views, dispatch} = this.props;
+    const photosUrl = toUrl(toPath(ModuleNames.photos), null, {app: {refresh: true}});
+    const videosUrl = toUrl(toPath(ModuleNames.videos), null, {app: {refresh: true}});
+    const messagesUrl = toUrl(toPath(ModuleNames.messages), null, {app: {refresh: true}});
+
     return (
       <div className="app-BottomNav g-doc-width">
         <TabBar noRenderContent={true} barTintColor="#108ee9" tintColor="#ff0" unselectedTintColor="#fff">
           <TabBar.Item
-            icon={PhotosLink}
-            selectedIcon={PhotosLink}
+            icon={<Icon type={IconClass.PICTURE} />}
+            selectedIcon={<Icon type={IconClass.PICTURE} />}
             title="组团"
             key="photos"
             selected={isCur(views, ModuleNames.photos)}
@@ -53,16 +38,16 @@ class Component extends React.PureComponent<Props> {
           <TabBar.Item
             title="分享"
             key="videos"
-            icon={VideosLink}
-            selectedIcon={VideosLink}
+            icon={<Icon type={IconClass.LIVE} />}
+            selectedIcon={<Icon type={IconClass.LIVE} />}
             selected={isCur(views, ModuleNames.videos)}
             onPress={() => {
               dispatch(routerActions.push(videosUrl));
             }}
           />
           <TabBar.Item
-            icon={MessagesLink}
-            selectedIcon={MessagesLink}
+            icon={<Icon type={IconClass.MESSAGE} />}
+            selectedIcon={<Icon type={IconClass.MESSAGE} />}
             title="消息"
             key="messages"
             selected={isCur(views, ModuleNames.messages)}

@@ -1,6 +1,6 @@
 import {Icon, NavBar} from "antd-mobile";
 import {toUrl} from "common/routers";
-import LinkButton from "components/LinkButton";
+import {routerActions} from "connected-react-router";
 import {RootState, RouterData} from "modules";
 import {ModuleNames} from "modules/names";
 import * as React from "react";
@@ -16,20 +16,22 @@ interface Props extends DispatchProp {
 }
 
 class Component extends React.PureComponent<Props> {
-  private onShowUser = () => {
-    // this.props.dispatch(thisModule.actions.showCurModal(CurModal.userInfo));
+  private onShowSearch = () => {
+    const {pathname, showSearch, searchData, dispatch} = this.props;
+    const url = toUrl(pathname, {...searchData, [ModuleNames.app]: {...searchData.app, showSearch: !showSearch}}, null);
+    dispatch(routerActions.push(url));
   };
 
   public render() {
-    const {pathname, showSearch, searchData, logoUrl, avatarUrl, dispatch} = this.props;
+    const {logoUrl, avatarUrl} = this.props;
     return (
       <div className="app-TopNav g-doc-width">
         <NavBar
-          icon={<span onClick={this.onShowUser} className="avatar" style={{backgroundImage: `url(${avatarUrl})`}} />}
+          icon={<span className="avatar" style={{backgroundImage: `url(${avatarUrl})`}} />}
           rightContent={
-            <LinkButton href={toUrl(pathname, {...searchData, [ModuleNames.app]: {...searchData.app, showSearch: !showSearch}})} key="0" dispatch={dispatch}>
+            <div onClick={this.onShowSearch}>
               <Icon type="search" />
-            </LinkButton>
+            </div>
           }
         >
           <img src={logoUrl} className="logo" />

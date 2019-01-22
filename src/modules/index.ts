@@ -31,7 +31,7 @@ export const moduleGetter = {
 
 export type ModuleGetter = ModulesDefined<typeof moduleGetter>; // 验证一下是否有模块忘了配置
 
-// 定义整站的路由参数默认值
+// 定义整站的路由参数默认值，将所有模块中定义的默认值合起来
 export const defRouteData = {
   [ModuleNames.app]: appDefRouteData,
   [ModuleNames.photos]: photosDefRouteData,
@@ -44,6 +44,8 @@ type ModuleRouterData = ModulesDefined<typeof defRouteData>; // 验证一下是�
 
 type ModuleRouterDataOptions = {[k in keyof ModuleRouterData]: DeepPartial<ModuleRouterData[k]>}; // 路由参数均为可选项
 
+// 扩展 connected-react-router 的路由结构
+// wholeSearchData = searchData + defaultSearchData
 export type RouterData = {
   views: {[moduleName: string]: {[viewName: string]: boolean}};
   pathData: {[M in keyof ModuleRouterData]?: ModuleRouterData[M]["pathData"]};
@@ -70,12 +72,12 @@ export type RootState = BaseState<RootRouter> & ModulesDefined<States>; // 验�
 export type ReturnModule<T extends () => any> = T extends () => Promise<infer R> ? R : T extends () => infer R ? R : Module;
 
 // 定义整站路由与view的匹配模式
-export const moduleToUrl: {[K in keyof ModuleGetter]: {[V in keyof ReturnModule<ModuleGetter[K]>["views"]]+?: string}} = {
+export const viewToPath: {[K in keyof ModuleGetter]: {[V in keyof ReturnModule<ModuleGetter[K]>["views"]]+?: string}} = {
   app: {Main: "/"},
-  photos: {Main: "/photos", List: "/photos/list", Details: "/photos/item/:itemId"},
-  videos: {Main: "/videos", List: "/videos/list", Details: "/videos/item/:itemId"},
-  messages: {Main: "/messages", List: "/messages/list"},
-  comments: {Main: "/:type/item/:typeId/comments", List: "/:type/item/:typeId/comments/list", Details: "/:type/item/:typeId/comments/item/:itemId"},
+  photos: {Main: "/photos", Details: "/photos/:itemId"},
+  videos: {Main: "/videos", Details: "/videos/:itemId"},
+  messages: {Main: "/messages"},
+  comments: {Main: "/:type/:typeId/comments", Details: "/:type/:typeId/comments/:itemId"},
 };
 
-export type ModuleToUrl = ModulesDefined<typeof moduleToUrl>; // 验证一下是否有模块忘了配置
+export type ViewToPath = ModulesDefined<typeof viewToPath>; // 验证一下是否有模块忘了配置

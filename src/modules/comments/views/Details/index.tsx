@@ -1,6 +1,6 @@
 import {Icon as MIcon} from "antd-mobile";
 import {toPath, toUrl} from "common/routers";
-import LinkButton from "components/LinkButton";
+import {routerActions} from "connected-react-router";
 import {ItemDetail, ListSearch, PathData} from "entity/comment";
 import {RootState, RouterData} from "modules";
 import {ModuleNames} from "modules/names";
@@ -17,26 +17,29 @@ interface Props extends DispatchProp {
 }
 
 class Component extends React.PureComponent<Props> {
-  public render() {
+  private onBack = () => {
     const {
-      searchData,
       dispatch,
+      searchData,
       pathData: {type, typeId},
       listSearch,
-      itemDetail,
     } = this.props;
+
+    const listPath = toPath(ModuleNames.comments, "Main", {type, typeId});
+    const url = toUrl(listPath, {...searchData, [ModuleNames.comments]: {search: {...listSearch, articleId: typeId}}}, null);
+    dispatch(routerActions.push(url));
+  };
+
+  public render() {
+    const {itemDetail} = this.props;
     if (itemDetail) {
       return (
         <div className={`${ModuleNames.comments}-Details g-modal g-enter-in`}>
           <div className="list-header">
-            <LinkButton
-              dispatch={dispatch}
-              href={toUrl(toPath(ModuleNames.comments, "List", {type, typeId}), {...searchData, [ModuleNames.comments]: {search: {...listSearch, articleId: typeId}}})}
-              className="close-button"
-            >
+            <div onClick={this.onBack} className="close-button">
               <MIcon size="md" type="left" />
               <span>返回</span>
-            </LinkButton>
+            </div>
           </div>
           <div className="list-items">
             <div className="g-border-top">

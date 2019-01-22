@@ -9,7 +9,7 @@ export {State} from "entity/video";
 
 class ModuleHandlers extends ArticleHandlers<State, VideoResource> {
   constructor() {
-    super({}, {api});
+    super({api});
   }
   @effect()
   protected async [ModuleNames.videos + "/INIT"]() {

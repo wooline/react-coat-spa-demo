@@ -1,7 +1,6 @@
+import {Pagination} from "antd-mobile";
 import {toPath, toUrl} from "common/routers";
 import Icon, {IconClass} from "components/Icon";
-import LinkButton from "components/LinkButton";
-import Pagination from "components/Pagination";
 import Search from "components/Search";
 import {routerActions} from "connected-react-router";
 import {ListItem, ListSearch, ListSummary} from "entity/video";
@@ -22,47 +21,40 @@ interface Props extends DispatchProp {
 let scrollTop = 0;
 
 class Component extends React.PureComponent<Props> {
-  private scroll = () => {
-    window.scrollTo(0, scrollTop);
-    scrollTop = 0;
+  private onPageChange = (page: number) => {
+    const {dispatch, pathname, listSearch} = this.props;
+    const url = toUrl(pathname, {[ModuleNames.videos]: {search: {...listSearch, page}}}, null);
+    dispatch(routerActions.push(url));
   };
-  private onItemClick = () => {
+  private onItemClick = (itemId: string) => {
+    // 记住当前滚动位置
     scrollTop = window.pageYOffset;
+    const {dispatch} = this.props;
+    const detailsPath = toPath(ModuleNames.comments, "Main", {type: ModuleNames.videos, typeId: itemId});
+    const url = toUrl(detailsPath, {[ModuleNames.comments]: {search: {articleId: itemId}}}, null);
+    dispatch(routerActions.push(url));
   };
   private onSearch = (title: string) => {
     const {dispatch, pathname} = this.props;
-    dispatch(routerActions.push(toUrl(pathname, {[ModuleNames.videos]: {search: {title}}})));
+    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: true}, [ModuleNames.videos]: {search: {title, page: 1}}}, null);
+    dispatch(routerActions.push(url));
   };
   private onSearchClose = () => {
     const {dispatch, pathname} = this.props;
-    dispatch(routerActions.push(toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.videos]: {search: {title: null}}})));
-    /* if (this.props.listSearch!.title) {
-      dispatch(routerActions.push(toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.videos]: {search: {title: null}}})));
-    } else {
-      dispatch(routerActions.push(toUrl(pathname, search, {[ModuleNames.app]: {showSearch: false}})));
-    } */
+    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.videos]: {search: {title: ""}}}, null);
+    dispatch(routerActions.push(url));
   };
 
-  public componentDidMount() {
-    this.scroll();
-  }
-  public componentDidUpdate() {
-    this.scroll();
-  }
-
   public render() {
-    const {dispatch, showSearch, pathname, listSearch, listItems, listSummary} = this.props;
+    const {showSearch, listSearch, listItems, listSummary} = this.props;
 
     if (listItems && listSearch) {
-      const itemBaseUrl = toUrl(toPath(ModuleNames.comments, "List", {type: ModuleNames.videos, typeId: "---"}), {
-        [ModuleNames.comments]: {search: {articleId: "---"}},
-      });
       return (
         <div className={`${ModuleNames.videos}-List g-pic-list`}>
-          <Search value={listSearch.title || ""} onClose={this.onSearchClose} onSearch={this.onSearch} visible={showSearch || listSearch.title !== null} />
+          <Search value={listSearch.title} onClose={this.onSearchClose} onSearch={this.onSearch} visible={showSearch || !!listSearch.title} />
           <div className="list-items">
             {listItems.map(item => (
-              <LinkButton onClick={this.onItemClick} dispatch={dispatch} href={itemBaseUrl.replace(/---/g, item.id)} key={item.id} className="g-pre-img">
+              <div onClick={() => this.onItemClick(item.id)} key={item.id} className="g-pre-img">
                 <div style={{backgroundImage: `url(${item.coverUrl})`}}>
                   <h5 className="title">{item.title}</h5>
                   <div className="listImg" />
@@ -71,12 +63,12 @@ class Component extends React.PureComponent<Props> {
                   </div>
                   <Icon className="icon-palyer" type={IconClass.PLAY_CIRCLE} />
                 </div>
-              </LinkButton>
+              </div>
             ))}
           </div>
           {listSummary && (
             <div className="g-pagination">
-              <Pagination dispatch={dispatch} baseUrl={toUrl(pathname, {[ModuleNames.videos]: {search: {...listSearch, page: NaN}}})} page={listSummary.page} totalPages={listSummary.totalPages} />
+              <Pagination current={listSummary.page} total={listSummary.totalPages} onChange={this.onPageChange} />
             </div>
           )}
         </div>
@@ -84,6 +76,17 @@ class Component extends React.PureComponent<Props> {
     } else {
       return null;
     }
+  }
+  public componentDidMount() {
+    this.scroll();
+  }
+  public componentDidUpdate() {
+    this.scroll();
+  }
+  private scroll() {
+    // 恢复记住的滚动位置
+    window.scrollTo(0, scrollTop);
+    scrollTop = 0;
   }
 }
 

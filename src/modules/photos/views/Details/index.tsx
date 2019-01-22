@@ -1,7 +1,7 @@
 import {Carousel, Icon as MIcon} from "antd-mobile";
 import {toPath, toUrl} from "common/routers";
 import Icon, {IconClass} from "components/Icon";
-import LinkButton from "components/LinkButton";
+import {routerActions} from "connected-react-router";
 import {ItemDetail, ListSearch} from "entity/photo";
 import {RootState, RouterData} from "modules";
 import {Main as Comments} from "modules/comments/views";
@@ -37,18 +37,28 @@ class Component extends React.PureComponent<Props, State> {
   private moreRemark = () => {
     this.setState({moreDetail: !this.state.moreDetail});
   };
-
+  private onClose = () => {
+    const {dispatch, listSearch} = this.props;
+    const listPath = toPath(ModuleNames.photos, "Main");
+    const url = toUrl(listPath, {[ModuleNames.photos]: {search: listSearch, showComment: false}}, null);
+    dispatch(routerActions.push(url));
+  };
+  private onShowComment = () => {
+    const {dispatch, searchData, pathname, showComment} = this.props;
+    const url = toUrl(pathname, {...searchData, [ModuleNames.photos]: {showComment: !showComment}}, null);
+    dispatch(routerActions.push(url));
+  };
   public render() {
-    const {pathname, searchData, showComment, itemDetail, listSearch, dispatch} = this.props;
+    const {showComment, itemDetail} = this.props;
     const {moreDetail} = this.state;
     if (itemDetail) {
       return (
         <div className={`${ModuleNames.photos}-Details g-details g-doc-width g-modal g-enter-in`}>
           <div className="subject">
             <h2>{itemDetail.title}</h2>
-            <LinkButton dispatch={dispatch} href={toUrl(toPath(ModuleNames.photos, "List", {}), {[ModuleNames.photos]: {search: listSearch, showComment: false}})} className="close-button">
+            <span onClick={this.onClose} className="close-button">
               <MIcon size="md" type="cross-circle" />
-            </LinkButton>
+            </span>
           </div>
           <div className={"remark" + (moreDetail ? " on" : "")} onClick={this.moreRemark}>
             {itemDetail.remark}
@@ -63,14 +73,7 @@ class Component extends React.PureComponent<Props, State> {
             </Carousel>
           </div>
 
-          <LinkButton
-            dispatch={dispatch}
-            href={toUrl(pathname, {
-              ...searchData,
-              [ModuleNames.photos]: {showComment: true},
-            })}
-            className="comment-bar"
-          >
+          <div onClick={this.onShowComment} className="comment-bar">
             <span>
               <Icon type={IconClass.HEART} />
               <br />
@@ -81,16 +84,9 @@ class Component extends React.PureComponent<Props, State> {
               <br />
               {itemDetail.comments}
             </span>
-          </LinkButton>
+          </div>
           <div className={"comments-panel" + (showComment ? " on" : "")}>
-            <LinkButton
-              dispatch={dispatch}
-              href={toUrl(pathname, {
-                ...searchData,
-                [ModuleNames.photos]: {showComment: false},
-              })}
-              className="mask"
-            />
+            <div onClick={this.onShowComment} className="mask" />
             <div className="dialog">
               <Comments />
             </div>

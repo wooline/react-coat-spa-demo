@@ -1,6 +1,6 @@
 import {Icon as MIcon} from "antd-mobile";
 import {toPath, toUrl} from "common/routers";
-import LinkButton from "components/LinkButton";
+import {routerActions} from "connected-react-router";
 import {ItemDetail, ListSearch} from "entity/video";
 import {RootState} from "modules";
 import {Main as Comments} from "modules/comments/views";
@@ -16,17 +16,24 @@ interface Props extends DispatchProp {
 }
 
 class Component extends React.PureComponent<Props> {
+  private onClose = () => {
+    const {dispatch, listSearch} = this.props;
+    const listPath = toPath(ModuleNames.videos, "Main");
+    const url = toUrl(listPath, {[ModuleNames.videos]: {search: listSearch}}, null);
+    dispatch(routerActions.push(url));
+  };
+
   public render() {
-    const {itemDetail, listSearch, dispatch} = this.props;
+    const {itemDetail} = this.props;
 
     if (itemDetail) {
       return (
         <div className={`${ModuleNames.videos}-Details g-details g-doc-width g-modal g-enter-in`}>
           <div className="subject">
             <h2 />
-            <LinkButton dispatch={dispatch} href={toUrl(toPath(ModuleNames.videos, "List", {}), {[ModuleNames.videos]: {search: listSearch}})} className="close-button">
+            <span onClick={this.onClose} className="close-button">
               <MIcon size="md" type="cross-circle" />
-            </LinkButton>
+            </span>
           </div>
           <div className="content">
             <video

@@ -9,7 +9,7 @@ export {State} from "entity/photo";
 
 class ModuleHandlers extends ArticleHandlers<State, PhotoResource> {
   constructor() {
-    super({}, {api});
+    super({api});
   }
   @effect()
   protected async parseRouter() {

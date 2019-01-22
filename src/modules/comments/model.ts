@@ -10,7 +10,7 @@ export {State} from "entity/comment";
 
 class ModuleHandlers extends ResourceHandlers<State, CommentResource> {
   constructor() {
-    super({}, {api});
+    super({api});
   }
   @effect()
   public async createItem(data: ItemCreateData) {
@@ -18,7 +18,6 @@ class ModuleHandlers extends ResourceHandlers<State, CommentResource> {
     if (!response.error) {
       // 如果创建成功，要让用户看到自已发表的评论，必须刷新列表，以创建时间排序
       const search = {...defRouteData.searchData.search, isNewest: true};
-      delete search.articleId;
       this.searchList(search);
     }
     return response;

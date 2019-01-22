@@ -1,5 +1,5 @@
+import {Pagination} from "antd-mobile";
 import {toUrl} from "common/routers";
-import Pagination from "components/Pagination";
 import Search from "components/Search";
 import {routerActions} from "connected-react-router";
 import {ListItem, ListSearch, ListSummary} from "entity/message";
@@ -17,28 +17,34 @@ interface Props extends DispatchProp {
   listSummary: ListSummary | undefined;
 }
 
+let scrollTop = 0;
+
 class Component extends React.PureComponent<Props> {
+  private onPageChange = (page: number) => {
+    const {dispatch, pathname, listSearch} = this.props;
+    const url = toUrl(pathname, {[ModuleNames.messages]: {search: {...listSearch, page}}}, null);
+    dispatch(routerActions.push(url));
+  };
+
   private onSearch = (title: string) => {
     const {dispatch, pathname} = this.props;
-    dispatch(routerActions.push(toUrl(pathname, {[ModuleNames.messages]: {search: {title}}})));
+    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: true}, [ModuleNames.messages]: {search: {title, page: 1}}}, null);
+    dispatch(routerActions.push(url));
   };
+
   private onSearchClose = () => {
     const {dispatch, pathname} = this.props;
-    dispatch(routerActions.push(toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.messages]: {search: {title: null}}})));
-    /* if (this.props.listSearch!.title) {
-      dispatch(routerActions.push(toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.messages]: {search: {title: null}}})));
-    } else {
-      dispatch(routerActions.push(toUrl(pathname, search, {[ModuleNames.app]: {showSearch: false}})));
-    } */
+    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.messages]: {search: {title: ""}}}, null);
+    dispatch(routerActions.push(url));
   };
 
   public render() {
-    const {dispatch, showSearch, pathname, listSearch, listItems, listSummary} = this.props;
+    const {showSearch, listSearch, listItems, listSummary} = this.props;
 
     if (listItems && listSearch) {
       return (
         <div className={`${ModuleNames.messages}-List`}>
-          <Search value={listSearch.title || ""} onClose={this.onSearchClose} onSearch={this.onSearch} visible={showSearch || listSearch.title !== null} />
+          <Search value={listSearch.title} onClose={this.onSearchClose} onSearch={this.onSearch} visible={showSearch || !!listSearch.title} />
           <div className="list-items">
             {listItems.map(item => (
               <div key={item.id}>
@@ -50,7 +56,7 @@ class Component extends React.PureComponent<Props> {
           </div>
           {listSummary && (
             <div className="g-pagination">
-              <Pagination dispatch={dispatch} baseUrl={toUrl(pathname, {[ModuleNames.messages]: {search: {...listSearch, page: NaN}}})} page={listSummary.page} totalPages={listSummary.totalPages} />
+              <Pagination current={listSummary.page} total={listSummary.totalPages} onChange={this.onPageChange} />
             </div>
           )}
         </div>
@@ -58,6 +64,17 @@ class Component extends React.PureComponent<Props> {
     } else {
       return null;
     }
+  }
+  public componentDidMount() {
+    this.scroll();
+  }
+  public componentDidUpdate() {
+    this.scroll();
+  }
+  private scroll() {
+    // 恢复记住的滚动位置
+    window.scrollTo(0, scrollTop);
+    scrollTop = 0;
   }
 }
 

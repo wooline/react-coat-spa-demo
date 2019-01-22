@@ -3,7 +3,6 @@ export interface ErrorType<Code = any, Detail = null> {
   message: string;
   detail?: Detail;
 }
-// export type Error_NotFound = ErrorType<"404 notFound">;
 
 export interface DefaultResult<Data = any, Error extends ErrorType = ErrorType> {
   data: Data;

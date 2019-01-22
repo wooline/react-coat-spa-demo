@@ -3,7 +3,7 @@ import "asset/css/global.less";
 import {toPath} from "common/routers";
 import NotFound from "components/NotFound";
 import {StartupStep} from "entity/global";
-import {moduleGetter, RootState, RouterData} from "modules";
+import {moduleGetter, RootState} from "modules";
 import {ModuleNames} from "modules/names";
 import * as React from "react";
 import {LoadingState, loadView} from "react-coat";
@@ -22,8 +22,6 @@ const VideosView = loadView(moduleGetter, ModuleNames.videos, "Main");
 const MessagesView = loadView(moduleGetter, ModuleNames.messages, "Main");
 
 interface Props extends DispatchProp {
-  pathname: string;
-  searchData: RouterData["searchData"];
   showLoginPop: boolean;
   showNotFoundPop: boolean;
   startupStep: StartupStep;
@@ -32,10 +30,10 @@ interface Props extends DispatchProp {
 
 class Component extends React.PureComponent<Props> {
   private onCloseLoginPop = () => {
-    this.props.dispatch(thisModule.actions.putCloseLoginPop());
+    this.props.dispatch(thisModule.actions.putShowLoginPop(false));
   };
   private onCloseNotFound = () => {
-    this.props.dispatch(thisModule.actions.putCloseNotFoundPop());
+    this.props.dispatch(thisModule.actions.putShowNotFoundPop(false));
   };
 
   public render() {
@@ -71,9 +69,7 @@ class Component extends React.PureComponent<Props> {
 const mapStateToProps = (state: RootState) => {
   const app = state.app;
   return {
-    pathname: state.router.location.pathname,
-    searchData: state.router.searchData,
-    showLoginPop: Boolean(app.showLoginPop && app.curUser !== null && !app.curUser.hasLogin),
+    showLoginPop: Boolean(app.showLoginPop && !app.curUser!.hasLogin),
     showNotFoundPop: Boolean(app.showNotFoundPop),
     startupStep: app.startupStep,
     globalLoading: app.loading.global,

@@ -9,7 +9,7 @@ export {State} from "entity/message";
 
 class ModuleHandlers extends ArticleHandlers<State, MessageResource> {
   constructor() {
-    super({}, {api});
+    super({api});
   }
   @effect()
   protected async [ModuleNames.messages + "/INIT"]() {

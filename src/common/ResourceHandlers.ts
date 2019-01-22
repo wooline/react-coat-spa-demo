@@ -7,8 +7,8 @@ import {ModuleNames} from "modules/names";
 import {BaseModuleHandlers, effect, LOCATION_CHANGE, RouterState} from "react-coat";
 
 export default class Handlers<S extends R["State"] = R["State"], R extends Resource = Resource> extends BaseModuleHandlers<S, RootState, ModuleNames> {
-  constructor(initState: S, protected config: {api: R["API"]}) {
-    super(initState);
+  constructor(protected config: {api: R["API"]}) {
+    super({} as S);
   }
   @effect()
   public async searchList(options: R["ListOptions"] = {}) {
@@ -60,7 +60,7 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
   protected async [LOCATION_CHANGE](router: RouterState) {
     const {views} = this.rootState.router;
     if (isCur(views, this.namespace)) {
-      // 直接调用this.parseRouter()，将不会触发action，也不会监控loading状态
+      // 直接调用this.parseRouter()，将不会触发action，也不会监控loading状态，所以此处使用 this.dispatch
       // 由于 parseRouter 是 protected 不对外开放的，所以这里不能使用 this.actions.parseRouter() 必须使用 this.callThisAction(this.parseRouter)
       this.dispatch(this.callThisAction(this.parseRouter));
     }
@@ -77,7 +77,7 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
       if (appHashData.refresh || (appHashData.refresh === null && (!this.state.itemDetail || this.state.itemDetail.id !== modulePathData.itemId))) {
         await this.getItemDetail(modulePathData.itemId!);
       }
-    } else if (isCur(views, this.namespace, "List" as any)) {
+    } else {
       if (appHashData.refresh || (appHashData.refresh === null && !equal(this.state.listSearch, moduleSearchData.search))) {
         await this.searchList(moduleSearchData.search);
       }
