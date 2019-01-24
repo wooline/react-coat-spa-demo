@@ -9,16 +9,12 @@ import {matchPath} from "react-router";
 {
   "/": ["app", "Main"],
   "/photos": ["photos", "Main"],
-  "/photos/list": ["photos", "List"],
-  "/photos/item/:itemId": ["photos", "Details"],
+  "/photos/:itemId": ["photos", "Details"],
   "/videos": ["videos", "Main"],
-  "/videos/list": ["videos", "List"],
-  "/videos/item/:itemId": ["videos", "Details"],
+  "/videos/:itemId": ["videos", "Details"],
   "/messages": ["messages", "Main"],
-  "/messages/list": ["messages", "List"],
-  "/:type/item/:typeId/comments": ["comments", "Main"],
-  "/:type/item/:typeId/comments/list": ["comments", "List"],
-  "/:type/item/:typeId/comments/item/:itemId": ["comments", "Details"],
+  "/:type/:typeId/comments": ["comments", "Main"],
+  "/:type/:typeId/comments/:itemId": ["comments", "Details"],
 }
 */
 type PathToView = {[pathname: string]: [string, string]};
@@ -29,7 +25,7 @@ type PathToView = {[pathname: string]: [string, string]};
 {
   app: {Main: true},
   photos: {Main: true, Details: true},
-  comments: {Main: true, List: true},
+  comments: {Main: true},
 }
 */
 type Views = {[moduleName: string]: {[viewName: string]: boolean}};
@@ -130,7 +126,7 @@ function serialize(data: {[key: string]: any}): string {
 
 /*
   根据 modules/index.ts中定义的 viewToPath, 只需知道要展示哪个view，就能推导出它的pathname，并自动将path中的参数占位符替换，例如：
-  /:type/item/:typeId/comments/list => photos/item/4/comments/list
+  /:type/:typeId/comments => photos/4/comments
 */
 export function toPath<N extends keyof RouterData["pathData"], M extends ReturnModule<ModuleGetter[N]>, V extends keyof M["views"], P extends RouterData["pathData"][N]>(
   moduleName: N,
@@ -159,7 +155,7 @@ export function toPath<N extends keyof RouterData["pathData"], M extends ReturnM
 {
   app: {Main: true},
   photos: {Main: true, Details: true},
-  comments: {Main: true, List: true},
+  comments: {Main: true},
 }
 */
 
