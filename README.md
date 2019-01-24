@@ -89,6 +89,13 @@ npm install
 - 控制住 RouterStore 流入流出的源头，第一时间将其消化转换为 ReduxStore。
 - RouterStore 是只读的。RouterStore 对程序本身是透明的，所以也不存在修改它。
 
+比如在 photos 模块中，详情页面需要控制评论的显示与隐藏，所以我们必须在 Store 中定义 showComment: boolean，而我们还想通过 url 来控制它，所以在 url 中也有&photos-showComment=true，这时就出现 RouterStore 和 ReduxStore 中都有 showComment 这个状态。你可能会想，那能不能把 ReduxStore 中的这个 showComment 去掉，直接使用 RouterStore 中的 showComment 就好？答案是不行的，不仅不能省，而且在 photos.Details 这个 view 中依赖的状态还必须是 ReduxStore 中的这个 showComment。
+
+```JS
+SearchData: {showComment: boolean}; // Router Store中的 showComment 不要直接在view中依赖
+State: {showComment?: boolean}; // Redux Store中的 showComment
+```
+
 ### Router Store 结构
 
 RouterStore 有着与 ReduxStore 类似的结构。
@@ -468,7 +475,7 @@ class ModuleHandlers extends ArticleHandlers<State, VideoResource> {
 
 至此，上文中提出的主要问题就已经解决完了。当然，很多人不喜欢继承，也不喜欢将路由封装得过重，而且在实际开发中，也可能并没有那么脑洞大开的产品经理，所以本 Demo 只是抛砖引玉，react-coat 框架本身也没有做任何强制性的封装，大家见仁见智，因项目而变。
 
-接下来在此基础上，我们需要演示一下 react-coat 的另一利器，开启服务器渲染(SSR)：
+接下来在此基础上，我们需要演示一下 react-coat 的另一重大利器，开启同构服务器渲染(SSR)。
 
 > [升级：SPA(单页应用)+SSR(服务器渲染)](https://github.com/wooline/react-coat-ssr-demo)
 
