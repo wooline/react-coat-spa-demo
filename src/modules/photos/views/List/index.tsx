@@ -103,9 +103,9 @@ class Component extends React.PureComponent<Props> {
 }
 
 const mapStateToProps = (state: RootState) => {
-  const model = state.photos;
+  const model = state.photos!;
   return {
-    showSearch: Boolean(state.app.showSearch),
+    showSearch: Boolean(state.app!.showSearch),
     pathname: state.router.location.pathname,
     listSearch: model.listSearch,
     listItems: model.listItems,

@@ -7,8 +7,8 @@ import {ModuleNames} from "modules/names";
 import {BaseModuleHandlers, effect, LOCATION_CHANGE, RouterState} from "react-coat";
 
 export default class Handlers<S extends R["State"] = R["State"], R extends Resource = Resource> extends BaseModuleHandlers<S, RootState, ModuleNames> {
-  constructor(protected config: {api: R["API"]}) {
-    super({} as S);
+  constructor(initState: S, protected config: {api: R["API"]}) {
+    super(initState);
   }
   @effect()
   public async searchList(options: R["ListOptions"] = {}) {

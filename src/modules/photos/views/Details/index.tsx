@@ -114,7 +114,7 @@ class Component extends React.PureComponent<Props, State> {
 }
 
 const mapStateToProps = (state: RootState) => {
-  const model = state.photos;
+  const model = state.photos!;
   return {
     pathname: state.router.location.pathname,
     searchData: state.router.searchData,

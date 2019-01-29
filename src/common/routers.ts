@@ -1,6 +1,6 @@
 import * as assignDeep from "deep-extend";
-import {defRouteData, ModuleGetter, ReturnModule, RootRouter, RouterData, viewToPath} from "modules";
-import {RouterParser} from "react-coat";
+import {defRouteData, ModuleGetter, RootRouter, RouterData, viewToPath} from "modules";
+import {ReturnModule, RouterParser} from "react-coat";
 import {matchPath} from "react-router";
 
 /*

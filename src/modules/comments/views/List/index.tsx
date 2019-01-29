@@ -103,7 +103,7 @@ class Component extends React.PureComponent<Props> {
 }
 
 const mapStateToProps = (state: RootState) => {
-  const model = state.comments;
+  const model = state.comments!;
   const {
     pathData,
     searchData,

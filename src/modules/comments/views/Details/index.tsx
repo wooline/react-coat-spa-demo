@@ -94,8 +94,8 @@ const mapStateToProps = (state: RootState) => {
   return {
     searchData: state.router.searchData,
     pathData: state.router.pathData.comments!,
-    listSearch: state.comments.listSearch,
-    itemDetail: state.comments.itemDetail,
+    listSearch: state.comments!.listSearch,
+    itemDetail: state.comments!.itemDetail,
   };
 };
 

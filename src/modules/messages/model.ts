@@ -7,9 +7,11 @@ import api from "./api";
 // 定义本导出本模块的 ModuleState
 export {State} from "entity/message";
 
+const initState: State = {};
+
 class ModuleHandlers extends ArticleHandlers<State, MessageResource> {
-  constructor() {
-    super({api});
+  constructor(init: State) {
+    super(init, {api});
   }
   @effect()
   protected async [ModuleNames.messages + "/INIT"]() {
@@ -20,4 +22,4 @@ class ModuleHandlers extends ArticleHandlers<State, MessageResource> {
 // 导出本模块的Actions
 export type ModuleActions = Actions<ModuleHandlers>;
 
-export default exportModel(ModuleNames.messages, ModuleHandlers);
+export default exportModel(ModuleNames.messages, ModuleHandlers, initState);

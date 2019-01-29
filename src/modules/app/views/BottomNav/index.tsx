@@ -67,7 +67,7 @@ class Component extends React.PureComponent<Props> {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    hasLogin: state.app.curUser!.hasLogin,
+    hasLogin: state.app!.curUser!.hasLogin,
     views: state.router.views,
   };
 };

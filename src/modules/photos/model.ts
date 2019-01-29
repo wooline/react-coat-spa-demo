@@ -7,9 +7,11 @@ import api from "./api";
 // 定义本导出本模块的 ModuleState
 export {State} from "entity/photo";
 
+const initState: State = {};
+
 class ModuleHandlers extends ArticleHandlers<State, PhotoResource> {
-  constructor() {
-    super({api});
+  constructor(init: State) {
+    super(init, {api});
   }
   @effect()
   protected async parseRouter() {
@@ -26,4 +28,4 @@ class ModuleHandlers extends ArticleHandlers<State, PhotoResource> {
 // 导出本模块的Actions
 export type ModuleActions = Actions<ModuleHandlers>;
 
-export default exportModel(ModuleNames.photos, ModuleHandlers);
+export default exportModel(ModuleNames.photos, ModuleHandlers, initState);

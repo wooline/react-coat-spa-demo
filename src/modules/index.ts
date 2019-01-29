@@ -1,10 +1,10 @@
 import {DeepPartial} from "entity/common";
-import {defRouteData as appDefRouteData, ModuleState as AppState} from "modules/app/facade";
-import {defRouteData as commentsDefRouteData, ModuleState as CommentsState} from "modules/comments/facade";
-import {defRouteData as messagesDefRouteData, ModuleState as MessagesState} from "modules/messages/facade";
-import {defRouteData as photosDefRouteData, ModuleState as PhotosState} from "modules/photos/facade";
-import {defRouteData as videosDefRouteData, ModuleState as VideosState} from "modules/videos/facade";
-import {Module, RootState as BaseState, RouterState} from "react-coat";
+import {defRouteData as appDefRouteData} from "modules/app/facade";
+import {defRouteData as commentsDefRouteData} from "modules/comments/facade";
+import {defRouteData as messagesDefRouteData} from "modules/messages/facade";
+import {defRouteData as photosDefRouteData} from "modules/photos/facade";
+import {defRouteData as videosDefRouteData} from "modules/videos/facade";
+import {ReturnModule, RootState as BaseState, RouterState} from "react-coat";
 import {ModuleNames} from "./names";
 
 // 一个验证器，利用TS类型来确保增加一个module时，相关的配置都同时增加了
@@ -57,19 +57,7 @@ export type RouterData = {
 
 export type RootRouter = RouterState & RouterData;
 
-// 定义整站Module States
-interface States {
-  [ModuleNames.app]: AppState;
-  [ModuleNames.photos]: PhotosState;
-  [ModuleNames.videos]: VideosState;
-  [ModuleNames.messages]: MessagesState;
-  [ModuleNames.comments]: CommentsState;
-}
-
-// 定义整站的Root State
-export type RootState = BaseState<RootRouter> & ModulesDefined<States>; // 验证一下是否有模块忘了配置
-
-export type ReturnModule<T extends () => any> = T extends () => Promise<infer R> ? R : T extends () => infer R ? R : Module;
+export type RootState = BaseState<ModuleGetter, RootRouter>;
 
 // 定义整站路由与view的匹配模式
 export const viewToPath: {[K in keyof ModuleGetter]: {[V in keyof ReturnModule<ModuleGetter[K]>["views"]]+?: string}} = {
