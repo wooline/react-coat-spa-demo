@@ -1,59 +1,42 @@
-import {DeepPartial} from "entity/common";
+import {defineModuleGetter, defineRouterData} from "common/utils";
 import {defRouteData as appDefRouteData} from "modules/app/facade";
 import {defRouteData as commentsDefRouteData} from "modules/comments/facade";
 import {defRouteData as messagesDefRouteData} from "modules/messages/facade";
 import {defRouteData as photosDefRouteData} from "modules/photos/facade";
 import {defRouteData as videosDefRouteData} from "modules/videos/facade";
 import {ReturnModule, RootState as BaseState, RouterState} from "react-coat";
-import {ModuleNames} from "./names";
-
-// 一个验证器，利用TS类型来确保增加一个module时，相关的配置都同时增加了
-type ModulesDefined<T extends {[key in ModuleNames]: any}> = T;
 
 // 定义模块的加载方案，同步或者异步均可
-export const moduleGetter = {
-  [ModuleNames.app]: () => {
+export const moduleGetter = defineModuleGetter({
+  app: () => {
     return import(/* webpackChunkName: "app" */ "modules/app");
   },
-  [ModuleNames.photos]: () => {
+  photos: () => {
     return import(/* webpackChunkName: "photos" */ "modules/photos");
   },
-  [ModuleNames.videos]: () => {
+  videos: () => {
     return import(/* webpackChunkName: "videos" */ "modules/videos");
   },
-  [ModuleNames.messages]: () => {
+  messages: () => {
     return import(/* webpackChunkName: "messages" */ "modules/messages");
   },
-  [ModuleNames.comments]: () => {
+  comments: () => {
     return import(/* webpackChunkName: "comments" */ "modules/comments");
   },
-};
+});
 
-export type ModuleGetter = ModulesDefined<typeof moduleGetter>; // 验证一下是否有模块忘了配置
-
-// 定义整站的路由参数默认值，将所有模块中定义的默认值合起来
-export const defRouteData = {
-  [ModuleNames.app]: appDefRouteData,
-  [ModuleNames.photos]: photosDefRouteData,
-  [ModuleNames.videos]: videosDefRouteData,
-  [ModuleNames.messages]: messagesDefRouteData,
-  [ModuleNames.comments]: commentsDefRouteData,
-};
-
-type ModuleRouterData = ModulesDefined<typeof defRouteData>; // 验证一下是否有模块忘了配置
-
-type ModuleRouterDataOptions = {[k in keyof ModuleRouterData]: DeepPartial<ModuleRouterData[k]>}; // 路由参数均为可选项
+export type ModuleGetter = typeof moduleGetter;
 
 // 扩展 connected-react-router 的路由结构
-// wholeSearchData = searchData + defaultSearchData
-export type RouterData = {
-  views: {[moduleName: string]: {[viewName: string]: boolean}};
-  pathData: {[M in keyof ModuleRouterData]?: ModuleRouterData[M]["pathData"]};
-  searchData: {[M in keyof ModuleRouterDataOptions]?: ModuleRouterDataOptions[M]["searchData"]};
-  hashData: {[M in keyof ModuleRouterDataOptions]?: ModuleRouterDataOptions[M]["hashData"]};
-  wholeSearchData: {[M in keyof ModuleRouterData]?: ModuleRouterData[M]["searchData"]};
-  wholeHashData: {[M in keyof ModuleRouterData]?: ModuleRouterData[M]["hashData"]};
-};
+export const routerData = defineRouterData({
+  app: appDefRouteData,
+  photos: photosDefRouteData,
+  videos: videosDefRouteData,
+  messages: messagesDefRouteData,
+  comments: commentsDefRouteData,
+});
+
+export type RouterData = typeof routerData;
 
 export type RootRouter = RouterState & RouterData;
 
@@ -67,5 +50,3 @@ export const viewToPath: {[K in keyof ModuleGetter]: {[V in keyof ReturnModule<M
   messages: {Main: "/messages"},
   comments: {Main: "/:type/:typeId/comments", Details: "/:type/:typeId/comments/:itemId"},
 };
-
-export type ViewToPath = ModulesDefined<typeof viewToPath>; // 验证一下是否有模块忘了配置

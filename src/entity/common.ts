@@ -14,6 +14,9 @@ export type ModuleRoute<P extends {} = {}, S extends {} = {}, H extends {} = {}>
   searchData: S;
   hashData: H;
 };
+
+export type Omit<T, K extends keyof T> = {[P in Exclude<keyof T, K>]: T[P]};
+
 export type DeepPartial<T> = {[P in keyof T]?: DeepPartial<T[P]>};
 
 export type CarefulExtend<T, U> = T extends undefined ? undefined : T & U;

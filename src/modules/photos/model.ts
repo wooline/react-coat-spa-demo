@@ -1,7 +1,7 @@
 import ArticleHandlers from "common/ArticleHandlers";
 import {PhotoResource, State} from "entity/photo";
 import {ModuleNames} from "modules/names";
-import {Actions, effect, exportModel} from "react-coat";
+import {Actions, exportModel} from "react-coat";
 import api from "./api";
 
 // 定义本导出本模块的 ModuleState
@@ -13,15 +13,10 @@ class ModuleHandlers extends ArticleHandlers<State, PhotoResource> {
   constructor(init: State) {
     super(init, {api});
   }
-  @effect()
   protected async parseRouter() {
     const result = await super.parseRouter();
     this.updateState({showComment: result.moduleSearchData.showComment});
     return result;
-  }
-  @effect()
-  protected async [ModuleNames.photos + "/INIT"]() {
-    await super.onInit();
   }
 }
 

@@ -1,3 +1,33 @@
+import {DeepPartial} from "entity/common";
+import {ModuleNames} from "modules/names";
+
+export function defineModuleGetter<T extends {[moduleName in ModuleNames]: () => any}>(getter: T) {
+  return getter as {[key in ModuleNames]: T[key]};
+}
+
+export function defineRouterData<T extends {[moduleName in ModuleNames]: {searchData: any; hashData: any; pathData: any}}>(routeData: T) {
+  const pathData: {[key in ModuleNames]?: T[key]["pathData"]} = {};
+  const searchData: {[key in ModuleNames]?: DeepPartial<T[key]["searchData"]>} = {};
+  const hashData: {[key in ModuleNames]?: DeepPartial<T[key]["hashData"]>} = {};
+  const wholeSearchData: {[key in ModuleNames]: T[key]["searchData"]} = {} as any;
+  const wholeHashData: {[key in ModuleNames]: T[key]["hashData"]} = {} as any;
+
+  for (const moduleName in routeData) {
+    if (routeData.hasOwnProperty(moduleName)) {
+      const key = moduleName as ModuleNames;
+      wholeSearchData[key] = routeData[key].searchData;
+      wholeHashData[key] = routeData[key].hashData;
+    }
+  }
+  return {
+    pathData,
+    searchData,
+    hashData,
+    wholeSearchData,
+    wholeHashData,
+  };
+}
+
 export function equal(obj1: any, obj2: any): boolean {
   if (obj1 === obj2) {
     return true;

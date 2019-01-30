@@ -1,10 +1,9 @@
 import {Toast} from "antd-mobile";
-import {isCur} from "common/routers";
 import {equal} from "common/utils";
 import {Resource} from "entity/resource";
 import {RootState} from "modules";
 import {ModuleNames} from "modules/names";
-import {BaseModuleHandlers, effect, LOCATION_CHANGE, RouterState} from "react-coat";
+import {BaseModuleHandlers, effect, RouterState, VIEW_INVALID} from "react-coat";
 
 export default class Handlers<S extends R["State"] = R["State"], R extends Resource = Resource> extends BaseModuleHandlers<S, RootState, ModuleNames> {
   constructor(initState: S, protected config: {api: R["API"]}) {
@@ -55,36 +54,32 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
     this.updateState({selectedIds: []} as any); // 清空当前选中项
     this.searchList(); // 刷新当前页
   }
-  // 因为LOCATION_CHANGE被多个模块监听，但是只有当前模块才需要处理，所以为了性能，不需要监控loading状态，改为parseRouter时监控loading
+
   @effect(null)
-  protected async [LOCATION_CHANGE](router: RouterState) {
-    const {views} = this.rootState.router;
-    if (isCur(views, this.namespace)) {
-      // 直接调用this.parseRouter()，将不会触发action，也不会监控loading状态，所以此处使用 this.dispatch
-      // 由于 parseRouter 是 protected 不对外开放的，所以这里不能使用 this.actions.parseRouter() 必须使用 this.callThisAction(this.parseRouter)
-      this.dispatch(this.callThisAction(this.parseRouter));
+  protected async [VIEW_INVALID](router: RouterState) {
+    const views = this.rootState.views;
+    if (views[this.namespace]) {
+      this.parseRouter();
     }
   }
-  @effect()
-  protected async parseRouter() {
-    const {views, pathData, wholeSearchData, wholeHashData} = this.rootState.router;
-    const modulePathData = pathData[this.namespace as "photos"]!;
-    const moduleSearchData = wholeSearchData[this.namespace as "photos"]!;
-    const moduleHashData = wholeHashData[this.namespace as "photos"]!;
-    const appHashData = wholeHashData[ModuleNames.app]! || {};
 
-    if (isCur(views, this.namespace, "Details" as any)) {
+  protected async parseRouter() {
+    const views = this.rootState.views;
+    const {pathData, wholeSearchData, wholeHashData} = this.rootState.router;
+    const modulePathData = pathData[this.namespace as "photos"]!; // 以photos为例
+    const moduleSearchData = wholeSearchData[this.namespace as "photos"];
+    const moduleHashData = wholeHashData[this.namespace as "photos"];
+    const appHashData = wholeHashData[ModuleNames.app];
+
+    if (views[this.namespace as "photos"]!.Details) {
       if (appHashData.refresh || (appHashData.refresh === null && (!this.state.itemDetail || this.state.itemDetail.id !== modulePathData.itemId))) {
-        await this.getItemDetail(modulePathData.itemId!);
+        await this.dispatch(this.actions.getItemDetail(modulePathData.itemId!));
       }
     } else {
       if (appHashData.refresh || (appHashData.refresh === null && !equal(this.state.listSearch, moduleSearchData.search))) {
-        await this.searchList(moduleSearchData.search);
+        await this.dispatch(this.actions.searchList(moduleSearchData.search));
       }
     }
     return {views, modulePathData, moduleSearchData, moduleHashData};
-  }
-  protected async onInit() {
-    return this.parseRouter();
   }
 }

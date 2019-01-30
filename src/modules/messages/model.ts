@@ -1,7 +1,7 @@
 import ArticleHandlers from "common/ArticleHandlers";
 import {MessageResource, State} from "entity/message";
 import {ModuleNames} from "modules/names";
-import {Actions, effect, exportModel} from "react-coat";
+import {Actions, exportModel} from "react-coat";
 import api from "./api";
 
 // 定义本导出本模块的 ModuleState
@@ -12,10 +12,6 @@ const initState: State = {};
 class ModuleHandlers extends ArticleHandlers<State, MessageResource> {
   constructor(init: State) {
     super(init, {api});
-  }
-  @effect()
-  protected async [ModuleNames.messages + "/INIT"]() {
-    await super.onInit();
   }
 }
 

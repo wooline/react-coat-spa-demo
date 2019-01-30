@@ -1,9 +1,9 @@
 import {TabBar} from "antd-mobile";
 import {UnauthorizedError} from "common/Errors";
-import {isCur, toPath, toUrl} from "common/routers";
+import {toPath, toUrl} from "common/routers";
 import Icon, {IconClass} from "components/Icon";
 import {routerActions} from "connected-react-router";
-import {RootState, RouterData} from "modules";
+import {RootState} from "modules";
 import {ModuleNames} from "modules/names";
 import React from "react";
 import {errorAction} from "react-coat";
@@ -12,7 +12,7 @@ import "./index.less";
 
 interface Props extends DispatchProp {
   hasLogin: boolean;
-  views: RouterData["views"];
+  views: RootState["views"];
 }
 
 class Component extends React.PureComponent<Props> {
@@ -30,7 +30,7 @@ class Component extends React.PureComponent<Props> {
             selectedIcon={<Icon type={IconClass.PICTURE} />}
             title="组团"
             key="photos"
-            selected={isCur(views, ModuleNames.photos)}
+            selected={!!views.photos}
             onPress={() => {
               dispatch(routerActions.push(photosUrl));
             }}
@@ -40,7 +40,7 @@ class Component extends React.PureComponent<Props> {
             key="videos"
             icon={<Icon type={IconClass.LIVE} />}
             selectedIcon={<Icon type={IconClass.LIVE} />}
-            selected={isCur(views, ModuleNames.videos)}
+            selected={!!views.videos}
             onPress={() => {
               dispatch(routerActions.push(videosUrl));
             }}
@@ -50,7 +50,7 @@ class Component extends React.PureComponent<Props> {
             selectedIcon={<Icon type={IconClass.MESSAGE} />}
             title="消息"
             key="messages"
-            selected={isCur(views, ModuleNames.messages)}
+            selected={!!views.messages}
             onPress={() => {
               if (!this.props.hasLogin) {
                 this.props.dispatch(errorAction(new UnauthorizedError()));
@@ -68,7 +68,7 @@ class Component extends React.PureComponent<Props> {
 const mapStateToProps = (state: RootState) => {
   return {
     hasLogin: state.app!.curUser!.hasLogin,
-    views: state.router.views,
+    views: state.views,
   };
 };
 

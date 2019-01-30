@@ -81,9 +81,9 @@ class ModuleHandlers extends BaseModuleHandlers<State, RootState, ModuleNames> {
 
   protected async parseRouter() {
     // 代码中不要直接依赖 RouterState，第一时间将 RouterState 消化为 ReduxState，
-    const searchData = this.rootState.router.wholeSearchData.app!;
+    const searchData = this.rootState.router.wholeSearchData.app;
     this.updateState({
-      showSearch: Boolean(searchData.showSearch),
+      showSearch: searchData.showSearch,
     });
   }
 

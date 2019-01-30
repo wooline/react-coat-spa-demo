@@ -1,5 +1,5 @@
 import * as assignDeep from "deep-extend";
-import {defRouteData, ModuleGetter, RootRouter, RouterData, viewToPath} from "modules";
+import {ModuleGetter, RootRouter, routerData, RouterData, viewToPath} from "modules";
 import {ReturnModule, RouterParser} from "react-coat";
 import {matchPath} from "react-router";
 
@@ -19,20 +19,6 @@ import {matchPath} from "react-router";
 */
 type PathToView = {[pathname: string]: [string, string]};
 
-/*
-  @Type Views
- 例如根据：pathToView可以匹配出当前展示了哪些view，形如：
-{
-  app: {Main: true},
-  photos: {Main: true, Details: true},
-  comments: {Main: true},
-}
-*/
-type Views = {[moduleName: string]: {[viewName: string]: boolean}};
-
-/* 
- 根据 modules/index.ts中定义的 viewToPath 反推导出来 pathToView
-*/
 const pathToView: PathToView = ((maps: {[mName: string]: string | {[vName: string]: string}}) => {
   const urls: {[pathname: string]: [string, string]} = {};
   for (const mName in maps) {
@@ -51,46 +37,6 @@ const pathToView: PathToView = ((maps: {[mName: string]: string | {[vName: strin
   }
   return urls;
 })(viewToPath as any);
-
-/*
-defSearch 和 defHash 根据 modules/index.ts中定义的 defRouteData 推导出来，例如：
-
-defRouteData 结构为：
-{
-  app: {pathData: {}, searchData: {showSearch: false, showRegisterPop: false}, hashData: {refresh: null}},
-  photos: {pathData: {}, searchData: {search: {title: null, page: 1, pageSize: 10}, showComment: false}, hashData: {}},
-  videos: {pathData: {}, searchData: {search: {title: null, page: 1, pageSize: 10}}, hashData: {}},
-  messages: {pathData: {}, searchData: {search: {title: null, page: 1, pageSize: 10}}, hashData: {}},
-  comments: {pathData: {type: "photos", typeId: ""}, searchData: {search: {articleId: "", isNewest: false, page: 1, pageSize: 10}}, hashData: {}},
-}
-推导出来 defSearch：
-{
-  app: {showSearch: false, showRegisterPop: false},
-  photos: {search: {title: null, page: 1, pageSize: 10}, showComment: false},
-  videos: {search: {title: null, page: 1, pageSize: 10}},
-  messages: {search: {title: null, page: 1, pageSize: 10}},
-  comments: {search: {articleId: "", isNewest: false, page: 1, pageSize: 10}},
-}
-推导出来 defHash：
-{
-  app: {refresh: null}, 
-  photos: {}, 
-  videos: {}, 
-  messages: {}, 
-  comments: {}
-}
-*/
-const {defSearch, defHash}: {defSearch: RouterData["wholeSearchData"]; defHash: RouterData["wholeHashData"]} = (routeData => {
-  const search = {};
-  const hash = {};
-  for (const moduleName in routeData) {
-    if (routeData.hasOwnProperty(moduleName)) {
-      search[moduleName] = routeData[moduleName].searchData;
-      hash[moduleName] = routeData[moduleName].hashData;
-    }
-  }
-  return {defSearch: search, defHash: hash};
-})(defRouteData);
 
 /*
 用JSON格式序列化路由参数，并加上模块名作前缀，例如：
@@ -150,20 +96,6 @@ export function toPath<N extends keyof RouterData["pathData"], M extends ReturnM
 }
 
 /*
- 根据路由配置，判断某view是否被当前展示。
- routerParser 会自动依据 pathToView 计算出当前哪些View被展示，如：
-{
-  app: {Main: true},
-  photos: {Main: true, Details: true},
-  comments: {Main: true},
-}
-*/
-
-export function isCur<N extends keyof ModuleGetter, M extends ReturnModule<ModuleGetter[N]>, V extends keyof M["views"]>(views: RouterData["views"], moduleName: N, viewName?: V): boolean {
-  return views[moduleName] && views[moduleName][(viewName as string) || "Main"];
-}
-
-/*
  排除默认路由参数，如果传参与默认一致，则省去
 */
 const excludeDefData = (data: any, def: any) => {
@@ -184,18 +116,13 @@ const excludeDefData = (data: any, def: any) => {
 };
 
 /*
- 合并默认路由参数，与以上方法互逆，注意补足参数为空的模块
+ 合并默认路由参数，与以上方法互逆
 */
-function mergeDefData(views: Views, data: any, def: any) {
-  const newData = {...data};
-  Object.keys(views).forEach(mName => {
-    if (!newData[mName]) {
-      newData[mName] = {};
-    }
-  });
-  Object.keys(newData).forEach(mName => {
-    if (def[mName]) {
-      newData[mName] = assignDeep({}, def[mName], newData[mName]);
+function mergeDefData<T extends {[moduleName: string]: any}>(data: {}, def: T) {
+  const newData = {...def};
+  Object.keys(data).forEach(moduleName => {
+    if (def[moduleName]) {
+      newData[moduleName] = assignDeep({}, def[moduleName], data[moduleName]);
     }
   });
   return newData;
@@ -205,13 +132,13 @@ function mergeDefData(views: Views, data: any, def: any) {
 export function toUrl(pathname: string, searchData: RouterData["searchData"] | null, hashData: RouterData["hashData"] | null): string {
   let url = pathname;
   if (searchData) {
-    const str = serialize(excludeDefData(searchData, defSearch));
+    const str = serialize(excludeDefData(searchData, routerData.wholeSearchData));
     if (str) {
       url += "?" + str.replace("?", "");
     }
   }
   if (hashData) {
-    const str = serialize(excludeDefData(hashData, defHash));
+    const str = serialize(excludeDefData(hashData, routerData.wholeHashData));
     if (str) {
       url += "#" + str.replace("#", "");
     }
@@ -240,23 +167,18 @@ export const routerParser: RouterParser<RootRouter> = (() => {
   对于 photos 模块，因为配置了：Details: "/photos/item/:itemId"，所以解析出 {itemId:2}
   对于 comments 模块，因为配置了：/:type/item/:typeId/comments/item/:itemId，所以解析出 {type:photos, typeId:2, itemId:66}
   */
-  function parsePathname(pathname: string): {pathData: PathData; views: Views} {
-    const views: Views = {};
+  function parsePathname(pathname: string): PathData {
     const pathData: PathData = {};
     Object.keys(pathToView).forEach(url => {
       const match = matchPath(pathname, url);
       if (match) {
-        const result = pathToView[url];
-        if (!views[result[0]]) {
-          views[result[0]] = {};
-        }
-        views[result[0]][result[1]] = true;
+        const [moduleName] = pathToView[url];
         if (match.params) {
-          pathData[result[0]] = match.params;
+          pathData[moduleName] = {...pathData[moduleName], ...match.params};
         }
       }
     });
-    return {views, pathData};
+    return pathData;
   }
 
   const ISO_DATE_FORMAT = /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?(Z|[+-][01]\d:[0-5]\d)$/;
@@ -310,28 +232,16 @@ export const routerParser: RouterParser<RootRouter> = (() => {
 
   const parser: RouterParser<RootRouter> = (nextRouter, prevRouter) => {
     const nRouter: RootRouter = {...nextRouter};
-    const changed = {pathname: false, search: false, hash: false};
     if (!prevRouter || nextRouter.location.pathname !== prevRouter.location.pathname) {
-      const {views, pathData} = parsePathname(nextRouter.location.pathname);
-      nRouter.views = views;
-      nRouter.pathData = pathData;
-      changed.pathname = true;
+      nRouter.pathData = parsePathname(nextRouter.location.pathname);
     }
     if (!prevRouter || nextRouter.location.search !== prevRouter.location.search) {
       nRouter.searchData = nextRouter.location.search.split(/[&?]/).reduce(reduce, {});
-      changed.search = true;
+      nRouter.wholeSearchData = mergeDefData(nRouter.searchData, routerData.wholeSearchData);
     }
     if (!prevRouter || nextRouter.location.hash !== prevRouter.location.hash) {
       nRouter.hashData = nextRouter.location.hash.split(/[&#]/).reduce(reduce, {});
-      changed.hash = true;
-    }
-    if (changed.pathname || changed.search) {
-      // 加上默认参数
-      nRouter.wholeSearchData = mergeDefData(nRouter.views, nRouter.searchData, defSearch);
-    }
-    if (changed.pathname || changed.hash) {
-      // 加上默认参数
-      nRouter.wholeHashData = mergeDefData(nRouter.views, nRouter.hashData, defHash);
+      nRouter.wholeHashData = mergeDefData(nRouter.hashData, routerData.wholeHashData);
     }
     return nRouter;
   };

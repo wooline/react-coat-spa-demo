@@ -173,36 +173,14 @@ export const viewToPath: {[K in keyof ModuleGetter]: {[V in keyof ReturnModule<M
 }
 ```
 
-好了，现在我们能根据以上的 pathToView，计算出当前有哪些 view 被展示，比如：/photos/1/comments，匹配这条 pathname 的有：
+比如当前 pathname 为：/photos/1/comments，匹配这条的有：
 
 - "/": ["app", "Main"]
 - "/photos": ["photos", "Main"]
 - "/photos/:itemId": ["photos", "Details"],
 - "/:type/:typeId/comments": ["comments", "Main"],
 
-所以，当 pathname 为 /photos/1/comments 时被展示的 views 有：
-
 ```JS
-{
-  app: {Main: true},
-  photos: {Main: true, Details: true},
-  comments: {Main: true},
-}
-```
-
-我们再也不用在程序中写死 pathname 了，比如：
-
-```JS
-// 原来写死的字符串 /photos
-if(pathname === "/photos"){
-  ....
-}
-
-// 变成强类型的
-if(isCur(views, ModuleNames.photos, "Main")){
-  ...
-}
-
 // 原来模块自已去写正则解析pathname
 const arr = pathname.match(/^\/photos\/(\d+)$/);
 
@@ -215,7 +193,7 @@ pathData: {
 
 **结论**
 
-- 这样一来，我们既解决了代码中写死 pathname 的问题，又用 TS 强类型来规范了 pathname 中的参数，还可以让每个模块自由定义参数名称
+- 这样一来，我们既用 TS 强类型来规范了 pathname 中的参数，还可以让每个模块自由定义参数名称
 
 ### 定义 searchData 和 hashData
 

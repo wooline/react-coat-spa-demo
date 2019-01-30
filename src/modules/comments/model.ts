@@ -24,10 +24,6 @@ class ModuleHandlers extends ResourceHandlers<State, CommentResource> {
     }
     return response;
   }
-  @effect()
-  protected async [ModuleNames.comments + "/INIT"]() {
-    await super.onInit();
-  }
 }
 
 // 导出本模块的Actions
