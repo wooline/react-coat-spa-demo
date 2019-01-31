@@ -30,7 +30,7 @@ class Component extends React.PureComponent<Props> {
     // 记住当前滚动位置
     scrollTop = window.pageYOffset;
     const {dispatch} = this.props;
-    const detailsPath = toPath(ModuleNames.comments, "Main", {type: ModuleNames.videos, typeId: itemId});
+    const detailsPath = toPath(ModuleNames.comments, "Main", {type: "videos", typeId: itemId});
     const url = toUrl(detailsPath, {comments: {search: {articleId: itemId}}});
     dispatch(routerActions.push(url));
   };

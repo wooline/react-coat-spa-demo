@@ -1,7 +1,7 @@
 import {Icon, NavBar} from "antd-mobile";
 import {toUrl} from "common/routers";
 import {routerActions} from "connected-react-router";
-import {RootState, RouterData} from "modules";
+import {RootRouter, RootState} from "modules";
 import * as React from "react";
 import {connect, DispatchProp} from "react-redux";
 import "./index.less";
@@ -9,7 +9,7 @@ import "./index.less";
 interface Props extends DispatchProp {
   showSearch: boolean;
   pathname: string;
-  searchData: RouterData["searchData"];
+  searchData: RootRouter["searchData"];
   avatarUrl: string;
   logoUrl: string;
 }

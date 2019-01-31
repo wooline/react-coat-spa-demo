@@ -1,7 +1,7 @@
 import {Button, InputItem, List, Toast} from "antd-mobile";
 import {RCForm} from "entity/common";
 import {LoginRequest} from "entity/session";
-import {RootState, RouterData} from "modules";
+import {RootRouter, RootState} from "modules";
 import thisModule from "modules/app/facade";
 import {createForm} from "rc-form";
 import * as React from "react";
@@ -10,7 +10,7 @@ import "./index.less";
 
 interface Props extends RCForm, DispatchProp {
   pathname: string;
-  searchData: RouterData["searchData"];
+  searchData: RootRouter["searchData"];
 }
 
 class Component extends React.PureComponent<Props> {

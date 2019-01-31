@@ -1,9 +1,10 @@
 import * as assignDeep from "deep-extend";
-import {ModuleGetter, RootRouter, routerData, RouterData, viewToPath} from "modules";
+import {RootRouter, routerData, viewToPath} from "modules";
 import {ModuleNames} from "modules/names";
-import {ReturnModule, RouterParser} from "react-coat";
+import {RouterParser} from "react-coat";
 import {matchPath} from "react-router";
 
+type ViewToPath = typeof viewToPath;
 /*
 @Type PathToView
 根据 modules/index.ts中定义的 viewToPath 反推导出来，形如：
@@ -75,11 +76,7 @@ function serialize(data: {[key: string]: any}): string {
   根据 modules/index.ts中定义的 viewToPath, 只需知道要展示哪个view，就能推导出它的pathname，并自动将path中的参数占位符替换，例如：
   /:type/:typeId/comments => photos/4/comments
 */
-export function toPath<N extends ModuleNames, M extends ReturnModule<ModuleGetter[N]>, V extends keyof M["views"], P extends RouterData["pathData"][N]>(
-  moduleName: N,
-  viewName?: V,
-  params?: P
-): string {
+export function toPath<N extends ModuleNames, V extends keyof ViewToPath[N], P extends RootRouter["pathData"][N]>(moduleName: N, viewName: V, params?: P): string {
   viewName = viewName || ("Main" as V);
   const pathExp = viewToPath[moduleName as "app"][viewName as "Main"] || "";
   let pathname = pathExp;
@@ -130,7 +127,7 @@ function mergeDefData<T extends {[moduleName: string]: any}>(data: {}, def: T) {
 }
 
 // 生成 Url
-export function toUrl(pathname: string, searchData?: RouterData["searchData"] | null, hashData?: RouterData["hashData"]): string {
+export function toUrl(pathname: string, searchData?: RootRouter["searchData"] | null, hashData?: RootRouter["hashData"]): string {
   let url = pathname;
   if (searchData) {
     const str = serialize(excludeDefData(searchData, routerData.wholeSearchData));

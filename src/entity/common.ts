@@ -21,7 +21,7 @@ export type DeepPartial<T> = {[P in keyof T]?: DeepPartial<T[P]>};
 
 export type CarefulExtend<T, U> = T extends undefined ? undefined : T & U;
 
-export type PickOptions<T> = Pick<T, {[K in keyof T]-?: {} extends {[P in K]: T[K]} ? K : never}[keyof T]>;
+export type PickOptional<T> = Pick<T, {[K in keyof T]-?: {} extends {[P in K]: T[K]} ? K : never}[keyof T]>;
 
 export type PickOptions2<T> = Pick<T, {[K in keyof T]-?: T[K] extends Exclude<T[K], undefined> ? never : K}[keyof T]>;
 

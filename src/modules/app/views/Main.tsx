@@ -44,10 +44,10 @@ class Component extends React.PureComponent<Props> {
           <div className="g-page">
             <TopNav />
             <Switch>
-              <Redirect exact={true} path="/" to={toPath(ModuleNames.photos)} />
-              <Route exact={false} path={toPath(ModuleNames.photos)} component={PhotosView} />
-              <Route exact={false} path={toPath(ModuleNames.videos)} component={VideosView} />
-              <Route exact={false} path={toPath(ModuleNames.messages)} component={MessagesView} />
+              <Redirect exact={true} path="/" to={toPath(ModuleNames.photos, "Main")} />
+              <Route exact={false} path={toPath(ModuleNames.photos, "Main")} component={PhotosView} />
+              <Route exact={false} path={toPath(ModuleNames.videos, "Main")} component={VideosView} />
+              <Route exact={false} path={toPath(ModuleNames.messages, "Main")} component={MessagesView} />
               <Route component={NotFound} />
             </Switch>
             <BottomNav />

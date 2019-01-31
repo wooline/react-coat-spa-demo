@@ -2,7 +2,7 @@ import {Icon as MIcon} from "antd-mobile";
 import {toPath, toUrl} from "common/routers";
 import {routerActions} from "connected-react-router";
 import {ItemDetail, ListSearch, PathData} from "entity/comment";
-import {RootState, RouterData} from "modules";
+import {RootRouter, RootState} from "modules";
 import {ModuleNames} from "modules/names";
 import React from "react";
 import {findDOMNode} from "react-dom";
@@ -10,7 +10,7 @@ import {connect, DispatchProp} from "react-redux";
 import "./index.less";
 
 interface Props extends DispatchProp {
-  searchData: RouterData["searchData"];
+  searchData: RootRouter["searchData"];
   pathData: PathData;
   listSearch: ListSearch | undefined;
   itemDetail: ItemDetail | undefined;

@@ -18,9 +18,9 @@ interface Props extends DispatchProp {
 class Component extends React.PureComponent<Props> {
   public render() {
     const {views, dispatch} = this.props;
-    const photosUrl = toUrl(toPath(ModuleNames.photos), null, {app: {refresh: true}});
-    const videosUrl = toUrl(toPath(ModuleNames.videos), null, {app: {refresh: true}});
-    const messagesUrl = toUrl(toPath(ModuleNames.messages), null, {app: {refresh: true}});
+    const photosUrl = toUrl(toPath(ModuleNames.photos, "Main"), null, {app: {refresh: true}});
+    const videosUrl = toUrl(toPath(ModuleNames.videos, "Main"), null, {app: {refresh: true}});
+    const messagesUrl = toUrl(toPath(ModuleNames.messages, "Main"), null, {app: {refresh: true}});
 
     return (
       <div className="app-BottomNav g-doc-width">

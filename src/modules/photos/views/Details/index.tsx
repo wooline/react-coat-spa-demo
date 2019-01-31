@@ -3,7 +3,7 @@ import {toPath, toUrl} from "common/routers";
 import Icon, {IconClass} from "components/Icon";
 import {routerActions} from "connected-react-router";
 import {ItemDetail, ListSearch} from "entity/photo";
-import {RootState, RouterData} from "modules";
+import {RootRouter, RootState} from "modules";
 import {Main as Comments} from "modules/comments/views";
 import {ModuleNames} from "modules/names";
 import React from "react";
@@ -13,7 +13,7 @@ import "./index.less";
 
 interface Props extends DispatchProp {
   pathname: string;
-  searchData: RouterData["searchData"];
+  searchData: RootRouter["searchData"];
   showComment: boolean;
   listSearch: ListSearch | undefined;
   itemDetail: ItemDetail | undefined;

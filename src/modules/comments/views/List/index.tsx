@@ -2,7 +2,7 @@ import {Pagination} from "antd-mobile";
 import {toPath, toUrl} from "common/routers";
 import {routerActions} from "connected-react-router";
 import {ListItem, ListSearch, ListSummary, PathData} from "entity/comment";
-import {RootState, RouterData} from "modules";
+import {RootRouter, RootState} from "modules";
 import {ModuleNames} from "modules/names";
 import * as React from "react";
 import {findDOMNode} from "react-dom";
@@ -12,7 +12,7 @@ import "./index.less";
 interface Props extends DispatchProp {
   pathname: string;
   pathData: PathData;
-  searchData: RouterData["searchData"];
+  searchData: RootRouter["searchData"];
   listSearch: ListSearch | undefined;
   listItems: ListItem[] | undefined;
   listSummary: ListSummary | undefined;

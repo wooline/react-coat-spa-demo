@@ -1,10 +1,10 @@
-import {defineModuleGetter, defineRouterData} from "common/utils";
+import {defineModuleGetter, defineRouterData, defineViewToPath} from "common/utils";
 import {defRouteData as appDefRouteData} from "modules/app/facade";
 import {defRouteData as commentsDefRouteData} from "modules/comments/facade";
 import {defRouteData as messagesDefRouteData} from "modules/messages/facade";
 import {defRouteData as photosDefRouteData} from "modules/photos/facade";
 import {defRouteData as videosDefRouteData} from "modules/videos/facade";
-import {ReturnModule, RootState as BaseState, RouterState} from "react-coat";
+import {RootState as BaseState, RouterState} from "react-coat";
 
 // 定义模块的加载方案，同步或者异步均可
 export const moduleGetter = defineModuleGetter({
@@ -36,17 +36,15 @@ export const routerData = defineRouterData({
   comments: commentsDefRouteData,
 });
 
-export type RouterData = typeof routerData;
-
-export type RootRouter = RouterState & RouterData;
+export type RootRouter = RouterState & typeof routerData;
 
 export type RootState = BaseState<ModuleGetter, RootRouter>;
 
 // 定义整站路由与view的匹配模式
-export const viewToPath: {[K in keyof ModuleGetter]: {[V in keyof ReturnModule<ModuleGetter[K]>["views"]]+?: string}} = {
+export const viewToPath = defineViewToPath({
   app: {Main: "/"},
-  photos: {Main: "/photos", Details: "/photos/:itemId"},
-  videos: {Main: "/videos", Details: "/videos/:itemId"},
-  messages: {Main: "/messages"},
-  comments: {Main: "/:type/:typeId/comments", Details: "/:type/:typeId/comments/:itemId"},
-};
+  photos: {Main: "/photos", Details: "/photos/:itemId", List: null},
+  videos: {Main: "/videos", Details: "/videos/:itemId", List: null},
+  messages: {Main: "/messages", List: null},
+  comments: {Main: "/:type/:typeId/comments", Details: "/:type/:typeId/comments/:itemId", List: null},
+});
