@@ -40,12 +40,12 @@ class Component extends React.PureComponent<Props, State> {
   private onClose = () => {
     const {dispatch, listSearch} = this.props;
     const listPath = toPath(ModuleNames.photos, "Main");
-    const url = toUrl(listPath, {[ModuleNames.photos]: {search: listSearch, showComment: false}}, null);
+    const url = toUrl(listPath, {photos: {search: listSearch, showComment: false}});
     dispatch(routerActions.push(url));
   };
   private onShowComment = () => {
     const {dispatch, searchData, pathname, showComment} = this.props;
-    const url = toUrl(pathname, {...searchData, [ModuleNames.photos]: {showComment: !showComment}}, null);
+    const url = toUrl(pathname, {...searchData, photos: {showComment: !showComment}});
     dispatch(routerActions.push(url));
   };
   public render() {

@@ -1,5 +1,6 @@
 import * as assignDeep from "deep-extend";
 import {ModuleGetter, RootRouter, routerData, RouterData, viewToPath} from "modules";
+import {ModuleNames} from "modules/names";
 import {ReturnModule, RouterParser} from "react-coat";
 import {matchPath} from "react-router";
 
@@ -74,7 +75,7 @@ function serialize(data: {[key: string]: any}): string {
   根据 modules/index.ts中定义的 viewToPath, 只需知道要展示哪个view，就能推导出它的pathname，并自动将path中的参数占位符替换，例如：
   /:type/:typeId/comments => photos/4/comments
 */
-export function toPath<N extends keyof RouterData["pathData"], M extends ReturnModule<ModuleGetter[N]>, V extends keyof M["views"], P extends RouterData["pathData"][N]>(
+export function toPath<N extends ModuleNames, M extends ReturnModule<ModuleGetter[N]>, V extends keyof M["views"], P extends RouterData["pathData"][N]>(
   moduleName: N,
   viewName?: V,
   params?: P
@@ -129,7 +130,7 @@ function mergeDefData<T extends {[moduleName: string]: any}>(data: {}, def: T) {
 }
 
 // 生成 Url
-export function toUrl(pathname: string, searchData: RouterData["searchData"] | null, hashData: RouterData["hashData"] | null): string {
+export function toUrl(pathname: string, searchData?: RouterData["searchData"] | null, hashData?: RouterData["hashData"]): string {
   let url = pathname;
   if (searchData) {
     const str = serialize(excludeDefData(searchData, routerData.wholeSearchData));
@@ -160,15 +161,14 @@ export function toUrl(pathname: string, searchData: RouterData["searchData"] | n
   RouterParser<T = any> = (nextRouter: T, prevRouter?: T) => T
 */
 export const routerParser: RouterParser<RootRouter> = (() => {
-  type PathData = {[moduleName: string]: {[key: string]: any}};
   /*
   解析 pathname，得到当前展示了哪些 view，以及 pathname中的参数，不同模块对应的解析结果是不同的，例如：
-  当前 pathname 为 /photos/item/2/comments/item/66
-  对于 photos 模块，因为配置了：Details: "/photos/item/:itemId"，所以解析出 {itemId:2}
-  对于 comments 模块，因为配置了：/:type/item/:typeId/comments/item/:itemId，所以解析出 {type:photos, typeId:2, itemId:66}
+  当前 pathname 为 /photos/2/comments/66
+  对于 photos 模块，因为配置了：Details: "/photos/:itemId"，所以解析出 {itemId:2}
+  对于 comments 模块，因为配置了：/:type/:typeId/comments/:itemId，所以解析出 {type:photos, typeId:2, itemId:66}
   */
-  function parsePathname(pathname: string): PathData {
-    const pathData: PathData = {};
+  function parsePathname(pathname: string) {
+    const pathData: {[moduleName: string]: {[key: string]: any}} = {};
     Object.keys(pathToView).forEach(url => {
       const match = matchPath(pathname, url);
       if (match) {

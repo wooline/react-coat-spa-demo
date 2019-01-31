@@ -19,7 +19,7 @@ class Component extends React.PureComponent<Props> {
   private onClose = () => {
     const {dispatch, listSearch} = this.props;
     const listPath = toPath(ModuleNames.videos, "Main");
-    const url = toUrl(listPath, {[ModuleNames.videos]: {search: listSearch}}, null);
+    const url = toUrl(listPath, {videos: {search: listSearch}});
     dispatch(routerActions.push(url));
   };
 

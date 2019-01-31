@@ -23,13 +23,13 @@ let scrollTop = NaN;
 class Component extends React.PureComponent<Props> {
   private onPageChange = (page: number) => {
     const {dispatch, pathname, searchData, listSearch} = this.props;
-    const url = toUrl(pathname, {...searchData, [ModuleNames.comments]: {search: {...listSearch, page}}}, null);
+    const url = toUrl(pathname, {...searchData, comments: {search: {...listSearch, page}}});
     dispatch(routerActions.push(url));
   };
 
   private onSortChange = (isNewest: boolean) => {
     const {dispatch, pathname, searchData, listSearch} = this.props;
-    const url = toUrl(pathname, {...searchData, [ModuleNames.comments]: {search: {...listSearch, page: 1, isNewest}}}, null);
+    const url = toUrl(pathname, {...searchData, comments: {search: {...listSearch, page: 1, isNewest}}});
     dispatch(routerActions.push(url));
   };
 
@@ -43,7 +43,7 @@ class Component extends React.PureComponent<Props> {
       pathData: {type, typeId},
     } = this.props;
     const detailsPath = toPath(ModuleNames.comments, "Details", {type, typeId, itemId});
-    const url = toUrl(detailsPath, {...searchData, [ModuleNames.comments]: {}}, null);
+    const url = toUrl(detailsPath, {...searchData, comments: {}});
     dispatch(routerActions.push(url));
   };
 
@@ -112,7 +112,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     pathname,
     searchData,
-    pathData: pathData[ModuleNames.comments]!,
+    pathData: pathData.comments!,
     listSearch: model.listSearch,
     listItems: model.listItems,
     listSummary: model.listSummary,

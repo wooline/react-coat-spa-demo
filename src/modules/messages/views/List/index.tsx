@@ -22,19 +22,19 @@ let scrollTop = 0;
 class Component extends React.PureComponent<Props> {
   private onPageChange = (page: number) => {
     const {dispatch, pathname, listSearch} = this.props;
-    const url = toUrl(pathname, {[ModuleNames.messages]: {search: {...listSearch, page}}}, null);
+    const url = toUrl(pathname, {messages: {search: {...listSearch, page}}});
     dispatch(routerActions.push(url));
   };
 
   private onSearch = (title: string) => {
     const {dispatch, pathname} = this.props;
-    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: true}, [ModuleNames.messages]: {search: {title, page: 1}}}, null);
+    const url = toUrl(pathname, {app: {showSearch: true}, messages: {search: {title, page: 1}}});
     dispatch(routerActions.push(url));
   };
 
   private onSearchClose = () => {
     const {dispatch, pathname} = this.props;
-    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.messages]: {search: {title: ""}}}, null);
+    const url = toUrl(pathname, {app: {showSearch: false}, messages: {search: {title: ""}}});
     dispatch(routerActions.push(url));
   };
 

@@ -3,7 +3,7 @@ import {equal} from "common/utils";
 import {Resource} from "entity/resource";
 import {RootState} from "modules";
 import {ModuleNames} from "modules/names";
-import {BaseModuleHandlers, effect, RouterState, VIEW_INVALID} from "react-coat";
+import {BaseModuleHandlers, effect, VIEW_INVALID} from "react-coat";
 
 export default class Handlers<S extends R["State"] = R["State"], R extends Resource = Resource> extends BaseModuleHandlers<S, RootState, ModuleNames> {
   constructor(initState: S, protected config: {api: R["API"]}) {
@@ -56,7 +56,7 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
   }
 
   @effect(null)
-  protected async [VIEW_INVALID](router: RouterState) {
+  protected async [VIEW_INVALID]() {
     const views = this.rootState.views;
     if (views[this.namespace]) {
       this.parseRouter();
@@ -69,7 +69,7 @@ export default class Handlers<S extends R["State"] = R["State"], R extends Resou
     const modulePathData = pathData[this.namespace as "photos"]!; // 以photos为例
     const moduleSearchData = wholeSearchData[this.namespace as "photos"];
     const moduleHashData = wholeHashData[this.namespace as "photos"];
-    const appHashData = wholeHashData[ModuleNames.app];
+    const appHashData = wholeHashData.app;
 
     if (views[this.namespace as "photos"]!.Details) {
       if (appHashData.refresh || (appHashData.refresh === null && (!this.state.itemDetail || this.state.itemDetail.id !== modulePathData.itemId))) {

@@ -23,7 +23,7 @@ let scrollTop = 0;
 class Component extends React.PureComponent<Props> {
   private onPageChange = (page: number) => {
     const {dispatch, pathname, listSearch} = this.props;
-    const url = toUrl(pathname, {[ModuleNames.videos]: {search: {...listSearch, page}}}, null);
+    const url = toUrl(pathname, {videos: {search: {...listSearch, page}}});
     dispatch(routerActions.push(url));
   };
   private onItemClick = (itemId: string) => {
@@ -31,17 +31,17 @@ class Component extends React.PureComponent<Props> {
     scrollTop = window.pageYOffset;
     const {dispatch} = this.props;
     const detailsPath = toPath(ModuleNames.comments, "Main", {type: ModuleNames.videos, typeId: itemId});
-    const url = toUrl(detailsPath, {[ModuleNames.comments]: {search: {articleId: itemId}}}, null);
+    const url = toUrl(detailsPath, {comments: {search: {articleId: itemId}}});
     dispatch(routerActions.push(url));
   };
   private onSearch = (title: string) => {
     const {dispatch, pathname} = this.props;
-    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: true}, [ModuleNames.videos]: {search: {title, page: 1}}}, null);
+    const url = toUrl(pathname, {app: {showSearch: true}, videos: {search: {title, page: 1}}});
     dispatch(routerActions.push(url));
   };
   private onSearchClose = () => {
     const {dispatch, pathname} = this.props;
-    const url = toUrl(pathname, {[ModuleNames.app]: {showSearch: false}, [ModuleNames.videos]: {search: {title: ""}}}, null);
+    const url = toUrl(pathname, {app: {showSearch: false}, videos: {search: {title: ""}}});
     dispatch(routerActions.push(url));
   };
 

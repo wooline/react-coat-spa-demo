@@ -2,7 +2,6 @@ import {Icon, NavBar} from "antd-mobile";
 import {toUrl} from "common/routers";
 import {routerActions} from "connected-react-router";
 import {RootState, RouterData} from "modules";
-import {ModuleNames} from "modules/names";
 import * as React from "react";
 import {connect, DispatchProp} from "react-redux";
 import "./index.less";
@@ -18,7 +17,7 @@ interface Props extends DispatchProp {
 class Component extends React.PureComponent<Props> {
   private onShowSearch = () => {
     const {pathname, showSearch, searchData, dispatch} = this.props;
-    const url = toUrl(pathname, {...searchData, [ModuleNames.app]: {...searchData.app, showSearch: !showSearch}}, null);
+    const url = toUrl(pathname, {...searchData, app: {...searchData.app, showSearch: !showSearch}});
     dispatch(routerActions.push(url));
   };
 

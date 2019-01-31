@@ -26,7 +26,7 @@ class Component extends React.PureComponent<Props> {
     } = this.props;
 
     const listPath = toPath(ModuleNames.comments, "Main", {type, typeId});
-    const url = toUrl(listPath, {...searchData, [ModuleNames.comments]: {search: {...listSearch, articleId: typeId}}}, null);
+    const url = toUrl(listPath, {...searchData, comments: {search: {...listSearch, articleId: typeId}}});
     dispatch(routerActions.push(url));
   };
 
