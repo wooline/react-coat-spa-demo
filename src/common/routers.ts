@@ -77,7 +77,6 @@ function serialize(data: {[key: string]: any}): string {
   /:type/:typeId/comments => photos/4/comments
 */
 export function toPath<N extends ModuleNames, V extends keyof ViewToPath[N], P extends RootRouter["pathData"][N]>(moduleName: N, viewName: V, params?: P): string {
-  viewName = viewName || ("Main" as V);
   const pathExp = viewToPath[moduleName as "app"][viewName as "Main"] || "";
   let pathname = pathExp;
   if (params) {
