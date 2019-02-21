@@ -9,7 +9,7 @@ export {State} from "entity/photo";
 
 const initState: State = {};
 
-class ModuleHandlers extends ArticleHandlers<State, PhotoResource> {
+class ModuleHandlers extends ArticleHandlers<PhotoResource, State> {
   constructor(init: State) {
     super(init, {api});
   }

@@ -9,7 +9,7 @@ export {State} from "entity/video";
 
 const initState: State = {};
 
-class ModuleHandlers extends ArticleHandlers<State, VideoResource> {
+class ModuleHandlers extends ArticleHandlers<VideoResource, State> {
   constructor(init: State) {
     super(init, {api});
   }

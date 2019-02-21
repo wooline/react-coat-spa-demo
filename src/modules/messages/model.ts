@@ -9,7 +9,7 @@ export {State} from "entity/message";
 
 const initState: State = {};
 
-class ModuleHandlers extends ArticleHandlers<State, MessageResource> {
+class ModuleHandlers extends ArticleHandlers<MessageResource, State> {
   constructor(init: State) {
     super(init, {api});
   }

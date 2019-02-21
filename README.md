@@ -1,4 +1,5 @@
-- react-coat 同时支持`浏览器渲染(SPA)`和`服务器渲染(SSR)`，本 Demo 仅演示`浏览器渲染`，请先了解一下：[react-coat v4.0](https://github.com/wooline/react-coat)
+- react-coat 同时支持`单页浏览器渲染(SPA)`和`服务器渲染(SSR)`，本 Demo 仅演示`浏览器渲染`，请先了解一下：[react-coat v4.0](https://github.com/wooline/react-coat)
+- [本 Demo 讨论提问专用贴](https://github.com/wooline/react-coat-spa-demo/issues/1)
 - **如果有错误或 Bug 欢迎批评指正，如果觉得还不错请别忘了给个 Star >\_<**
 
 ---
@@ -14,13 +15,6 @@ react-coat 使用**Typescript**开发，集成**Redux**，由浅入深请看 3 �
 ---
 
 ## 第二站：进阶 SPA(单页应用)
-
-## 安装
-
-```
-git clone https://github.com/wooline/react-coat-spa-demo.git
-npm install
-```
 
 - [安装](#安装)
 - [运行](#运行)
@@ -40,6 +34,13 @@ npm install
   - [定义 Resource 相关的 ActionHandler](#定义-resource-相关的-actionhandler)
   - [逐层泛化](#逐层泛化)
 - [下一个 Demo](#下一个-demo)
+
+## 安装
+
+```
+git clone https://github.com/wooline/react-coat-spa-demo.git
+npm install
+```
 
 ## 运行
 
