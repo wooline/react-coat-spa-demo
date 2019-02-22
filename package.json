@@ -65,11 +65,11 @@
     "typescript": "~3.3.3"
   },
   "dependencies": {
-    "antd-mobile": "~2.2.9",
+    "antd-mobile": "~2.2.6",
     "deep-extend": "~0.6.0",
     "rc-form": "~2.2.7",
-    "react-coat": "~4.1.2",
-    "react-coat-pkg": "~4.0.3",
+    "react-coat": "~4.1.4",
+    "react-coat-pkg": "~4.1.1",
     "ts-import-plugin": "~1.5.5"
   },
   "browserslist": [
