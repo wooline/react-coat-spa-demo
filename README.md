@@ -1,6 +1,5 @@
 - react-coat 同时支持`单页浏览器渲染(SPA)`和`服务器渲染(SSR)`，本 Demo 仅演示`浏览器渲染`，请先了解一下：[react-coat v4.0](https://github.com/wooline/react-coat)
-- 你可能觉得本 Demo 中对路由封装过于重度，以及不喜欢使用 Class 继承的方式来组织 Model。没关系，本 Demo 只是演示众多解决方案中的一种，并不是唯一。
-- 本 Demo 中使用 Class 继承的方式来组织 Model，并不要求对 React 组件使用 Class Component 风格，并不违反 React FP 编程思想和趋势。随着 React Hooks 的正式发布，本框架将保持 API 不变的前提下，使用其替换掉 Redux 及相关库。
+- 你可能觉得本 Demo 中对路由封装过于重度，以及不喜欢使用 Class 继承的方式来组织 Model。没关系，本 Demo 只是演示众多解决方案中的一种，react-coat 框架本身并没任何要求。
 
 ---
 
